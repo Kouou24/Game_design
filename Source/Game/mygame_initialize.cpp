@@ -64,8 +64,8 @@ void CGameStateInit::draw_text() {
 	CDC *pDC = CDDraw::GetBackCDC();
 
 	/* Print title */
-	CTextDraw::ChangeFontLog(pDC, 69, "微軟正黑體", RGB(255, 255, 255));
-	CTextDraw::Print(pDC, 190, 90, "推箱子");
+	CTextDraw::ChangeFontLog(pDC, 36, "微軟正黑體", RGB(255, 255, 255));
+	CTextDraw::Print(pDC, 180, 90, "Push the Box!!");
 
 	/* Print info */
 	CTextDraw::ChangeFontLog(pDC,  24, "微軟正黑體", RGB(255, 255, 255));
