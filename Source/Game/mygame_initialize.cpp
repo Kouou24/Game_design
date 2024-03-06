@@ -14,7 +14,7 @@ using namespace game_framework;
 
 CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 {
-	
+
 }
 
 void CGameStateInit::OnInit()
@@ -37,7 +37,7 @@ void CGameStateInit::OnInit()
 
 void CGameStateInit::OnBeginState()
 {
-	
+
 }
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -56,7 +56,7 @@ void CGameStateInit::OnShow()
 }
 
 void CGameStateInit::load_background() {
-	background.LoadBitmapByString({ "resources/initialize_background.bmp" });
+	background.LoadBitmapByString({ "resources/background.bmp" });
 	background.SetTopLeft(0, 0);
 }
 
@@ -64,11 +64,11 @@ void CGameStateInit::draw_text() {
 	CDC *pDC = CDDraw::GetBackCDC();
 
 	/* Print title */
-	CTextDraw::ChangeFontLog(pDC, 36, "微軟正黑體", RGB(255, 255, 255));
-	CTextDraw::Print(pDC, 180, 90, "Push the Box!!");
+	//CTextDraw::ChangeFontLog(pDC, 36, "微軟正黑體", RGB(255, 255, 255));
+	//CTextDraw::Print(pDC, 180, 90, "Push the Box!!");
 
 	/* Print info */
-	CTextDraw::ChangeFontLog(pDC,  24, "微軟正黑體", RGB(255, 255, 255));
+	CTextDraw::ChangeFontLog(pDC, 24, "微軟正黑體", RGB(255, 255, 255));
 	CTextDraw::Print(pDC, 182, 431, "Press any key to start");
 
 	CDDraw::ReleaseBackCDC();
