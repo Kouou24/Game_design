@@ -42,7 +42,10 @@ void CGameStateInit::OnBeginState()
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	GotoGameState(GAME_STATE_RUN);		// 切換至GAME_STATE_RUN
+	if(nChar == VK_RETURN)
+	{
+		GotoGameState(GAME_STATE_RUN); // 切換至GAME_STATE_RUN
+	}
 }
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
@@ -58,6 +61,8 @@ void CGameStateInit::OnShow()
 void CGameStateInit::load_background() {
 	background.LoadBitmapByString({ "resources/background.bmp" });
 	background.SetTopLeft(0, 0);
+
+	
 }
 
 void CGameStateInit::draw_text() {
@@ -69,7 +74,7 @@ void CGameStateInit::draw_text() {
 
 	/* Print info */
 	CTextDraw::ChangeFontLog(pDC, 24, "微軟正黑體", RGB(255, 255, 255));
-	CTextDraw::Print(pDC, 182, 431, "Press any key to start");
+	CTextDraw::Print(pDC, 182, 431, "Press ENTER to start");
 
 	CDDraw::ReleaseBackCDC();
 }
