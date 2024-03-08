@@ -6,6 +6,8 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "mygame.h"
+#include <fstream>
+#include "config.h"
 
 using namespace game_framework;
 
@@ -31,21 +33,22 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
-	background.LoadBitmapByString({ 
-		"resources/phase11_background.bmp", 
-		"resources/phase12_background.bmp", 
-		"resources/phase21_background.bmp", 
-		"resources/phase22_background.bmp", 
-		"resources/phase31_background.bmp", 
-		"resources/phase32_background.bmp",
-		"resources/phase41_background.bmp",
-		"resources/phase42_background.bmp",
-		"resources/phase51_background.bmp",
-		"resources/phase52_background.bmp",
-		"resources/phase61_background.bmp",
-		"resources/phase62_background.bmp",
-	});
-	background.SetTopLeft(0, 0);
+	ifstream ifs("map/Random.map");
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			ifs >> map[i][j];
+			if (map[i][j] == 1) {
+				background_map[i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[i][j].SetTopLeft(MAP_SIZE*i+60, MAP_SIZE*j+60);
+			}
+			if (map[i][j] == 2) {
+				background_map[i][j].LoadBitmapByString({ "resources/wall.bmp" });
+				background_map[i][j].SetTopLeft(MAP_SIZE*i+60, MAP_SIZE*j+60);
+			}
+		}
+	}
+	ifs.close();
 
 	character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
 	character.SetTopLeft(150, 265);
@@ -133,7 +136,6 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			GotoGameState(GAME_STATE_OVER);
 		}
 	}
-	while (character.GetLeft <= 600) {
 		if (nChar == VK_UP) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() - 30);
 		}
@@ -165,19 +167,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			fin.SetFrameIndexOfBitmap(1);
 			win_flag = true;
 		}
-		if (CMovingBitmap::IsOverlap(character, chest_and_key) && phase == 3) {
-			chest_and_key.SetFrameIndexOfBitmap(1);
-		}
-		for (int i = 0; i < 3; i++) {
-			if (CMovingBitmap::IsOverlap(character, door[i]) && phase == 5) {
-				door[i].SetFrameIndexOfBitmap(1);
 
-			}
-
-		}
+		
 
 	}
-}
+
 
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -207,14 +201,23 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnShow()
 {
+	show_map();
 	show_image_by_phase();
 	show_text_by_phase();
 }
 
+void CGameStateRun::show_map() {
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (map[i][j] == 1) {
+				background_map[i][j].ShowBitmap();
+			}
+		}
+	}
+
+}
 void CGameStateRun::show_image_by_phase() {
 	if (phase <= 6) {
-		background.SetFrameIndexOfBitmap((phase - 1) * 2 + (sub_phase - 1));
-		background.ShowBitmap();
 		character.ShowBitmap();
 		box.ShowBitmap();
 		fin.ShowBitmap();
