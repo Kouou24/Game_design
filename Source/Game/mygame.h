@@ -96,6 +96,7 @@ namespace game_framework {
 		int sub_phase = 1;
 		CMovingBitmap background;
 		CMovingBitmap character;
+		CMovingBitmap box;
 		CMovingBitmap chest_and_key;
 		CMovingBitmap bee;
 		CMovingBitmap ball;
