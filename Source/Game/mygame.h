@@ -94,6 +94,8 @@ namespace game_framework {
 	private:
 		int phase = 1;
 		int sub_phase = 1;
+		int map[5][5];
+		CMovingBitmap background_map[5][5];
 		CMovingBitmap background;
 		CMovingBitmap character;
 		CMovingBitmap box;
@@ -103,6 +105,7 @@ namespace game_framework {
 		CMovingBitmap ball;
 		CMovingBitmap door[3];
 		bool win_flag = false;
+		void show_map();
 		void show_image_by_phase();
 		void show_text_by_phase();
 		bool validate_phase_1();
