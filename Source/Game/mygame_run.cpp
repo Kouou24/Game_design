@@ -53,6 +53,9 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	box.LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
 	box.SetTopLeft(180, 265);
 
+	fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
+	fin.SetTopLeft(260, 265);
+
 	chest_and_key.LoadBitmapByString({ "resources/chest.bmp", "resources/chest_ignore.bmp" }, RGB(255, 255, 255));
 	chest_and_key.SetTopLeft(150, 430);
 
@@ -74,63 +77,63 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	if (nChar == VK_RETURN) {
-		if (phase == 1) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_1();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-			}
+
+	if (phase == 1) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_1();
 		}
-		else if (phase == 2) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_2();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-			}
-		}
-		else if (phase == 3) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_3();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-			}
-		}
-		else if (phase == 4) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_4();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-			}
-		}
-		else if (phase == 5) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_5();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-			}
-		}
-		else if (phase == 6) {
-			if (sub_phase == 1) {
-				sub_phase += validate_phase_6();
-			}
-			else if (sub_phase == 2) {
-				sub_phase = 1;
-				phase += 1;
-				GotoGameState(GAME_STATE_OVER);
-			}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
 		}
 	}
+	else if (phase == 2) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_2();
+		}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
+		}
+	}
+	else if (phase == 3) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_3();
+		}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
+		}
+	}
+	else if (phase == 4) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_4();
+		}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
+		}
+	}
+	else if (phase == 5) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_5();
+		}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
+		}
+	}
+	else if (phase == 6) {
+		if (sub_phase == 1) {
+			sub_phase += validate_phase_6();
+		}
+		else if (sub_phase == 2) {
+			sub_phase = 1;
+			phase += 1;
+			GotoGameState(GAME_STATE_OVER);
+		}
+	}
+	while (character.GetLeft <= 600) {
 		if (nChar == VK_UP) {
 			character.SetTopLeft(character.GetLeft(), character.GetTop() - 30);
 		}
@@ -158,6 +161,10 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_LEFT) {
 			box.SetTopLeft(box.GetLeft() - 30, box.GetTop());
 		}
+		if (CMovingBitmap::IsOverlap(fin, box)) {
+			fin.SetFrameIndexOfBitmap(1);
+			win_flag = true;
+		}
 		if (CMovingBitmap::IsOverlap(character, chest_and_key) && phase == 3) {
 			chest_and_key.SetFrameIndexOfBitmap(1);
 		}
@@ -168,9 +175,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 
 		}
-	
+
+	}
 }
-	
 
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -210,6 +217,7 @@ void CGameStateRun::show_image_by_phase() {
 		background.ShowBitmap();
 		character.ShowBitmap();
 		box.ShowBitmap();
+		fin.ShowBitmap();
 		if (phase == 3 && sub_phase == 1) {
 			chest_and_key.ShowBitmap();
 		}
@@ -264,7 +272,7 @@ void CGameStateRun::show_text_by_phase() {
 }
 
 bool CGameStateRun::validate_phase_1() {
-	return character.GetImageFileName() == "resources/giraffe.bmp";
+	return win_flag;
 }
 
 bool CGameStateRun::validate_phase_2() {

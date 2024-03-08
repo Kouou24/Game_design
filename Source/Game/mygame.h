@@ -97,10 +97,12 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		CMovingBitmap box;
+		CMovingBitmap fin;
 		CMovingBitmap chest_and_key;
 		CMovingBitmap bee;
 		CMovingBitmap ball;
 		CMovingBitmap door[3];
+		bool win_flag = false;
 		void show_image_by_phase();
 		void show_text_by_phase();
 		bool validate_phase_1();
