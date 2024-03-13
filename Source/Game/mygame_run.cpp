@@ -33,6 +33,11 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
+	background.LoadBitmapByString({
+		"resources/background_down.bmp",
+		
+		});
+	background.SetTopLeft(0, 0);
 	ifstream ifs("map/Random.map");
 
 	for (int i = 0; i < 5; i++) {
@@ -40,11 +45,11 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 			ifs >> map[i][j];
 			if (map[i][j] == 1) {
 				background_map[i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[i][j].SetTopLeft(MAP_SIZE*i+60, MAP_SIZE*j+60);
+				background_map[i][j].SetTopLeft(MAP_SIZE*i+150, MAP_SIZE*j+150);
 			}
 			if (map[i][j] == 2) {
 				background_map[i][j].LoadBitmapByString({ "resources/wall.bmp" });
-				background_map[i][j].SetTopLeft(MAP_SIZE*i+60, MAP_SIZE*j+60);
+				background_map[i][j].SetTopLeft(MAP_SIZE*i+150, MAP_SIZE*j+150);
 			}
 		}
 	}
@@ -218,6 +223,7 @@ void CGameStateRun::show_map() {
 }
 void CGameStateRun::show_image_by_phase() {
 	if (phase <= 6) {
+		background.ShowBitmap();
 		character.ShowBitmap();
 		box.ShowBitmap();
 		fin.ShowBitmap();
