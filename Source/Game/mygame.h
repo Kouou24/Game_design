@@ -106,6 +106,8 @@ namespace game_framework {
 		CMovingBitmap door[3];
 		bool win_flag = false;
 		void show_map();
+		void phase_control();
+		void reset_phase();
 		void show_image_by_phase();
 		void show_text_by_phase();
 		bool validate_phase_1();
