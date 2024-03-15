@@ -34,7 +34,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	background.LoadBitmapByString({
-		"resources/background_down.bmp",
+		"resources/phase11_background.bmp",
 		
 		});
 	background.SetTopLeft(0, 0);
@@ -56,7 +56,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	ifs.close();
 
 	character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-	character.SetTopLeft(150, 265);
+	character.SetTopLeft(150, 260);
 
 	box.LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
 	box.SetTopLeft(180, 265);
@@ -206,8 +206,9 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnShow()
 {
-	show_map();
+	
 	show_image_by_phase();
+	
 	show_text_by_phase();
 }
 
@@ -224,6 +225,7 @@ void CGameStateRun::show_map() {
 void CGameStateRun::show_image_by_phase() {
 	if (phase <= 6) {
 		background.ShowBitmap();
+		show_map();
 		character.ShowBitmap();
 		box.ShowBitmap();
 		fin.ShowBitmap();
