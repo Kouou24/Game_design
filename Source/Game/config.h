@@ -17,4 +17,4 @@
 #define ENABLE_STATUSBAR     false      // 是否關閉 statusbar
 #define RESOLUTION_X     1920           // 全螢幕用，請設定成目前視窗的解析度 (width)。
 #define RESOLUTION_Y     1080           // 全螢幕用，請設定成目前視窗的解析度 (height)。
-#define MAP_SIZE     30                 // 每格地圖的大小
+#define MAP_SIZE     40                 // 每格地圖的大小

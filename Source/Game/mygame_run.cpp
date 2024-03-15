@@ -56,10 +56,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	ifs.close();
 
 	character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-	character.SetTopLeft(150, 260);
+	character.SetTopLeft(150,150);
 
 	box.LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
-	box.SetTopLeft(180, 265);
+	box.SetTopLeft(150+3*MAP_SIZE, 150+2*MAP_SIZE);
 
 	fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
 	fin.SetTopLeft(260, 265);
@@ -142,31 +142,31 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 		if (nChar == VK_UP) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - 30);
+			character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
 		}
 		if (nChar == VK_DOWN) {
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + 30);
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
 
 		}
 		if (nChar == VK_RIGHT) {
-			character.SetTopLeft(character.GetLeft() + 30, character.GetTop());
+			character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
 
 		}
 		if (nChar == VK_LEFT) {
-			character.SetTopLeft(character.GetLeft() - 30, character.GetTop());
+			character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
 
 		}
 		if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_UP) {
-			box.SetTopLeft(box.GetLeft(), box.GetTop() - 30);
+			box.SetTopLeft(box.GetLeft(), box.GetTop() - MAP_SIZE);
 		}
 		if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_DOWN) {
-			box.SetTopLeft(box.GetLeft(), box.GetTop() + 30);
+			box.SetTopLeft(box.GetLeft(), box.GetTop() + MAP_SIZE);
 		}
 		if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_RIGHT) {
-			box.SetTopLeft(box.GetLeft() + 30, box.GetTop());
+			box.SetTopLeft(box.GetLeft() + MAP_SIZE, box.GetTop());
 		}
 		if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_LEFT) {
-			box.SetTopLeft(box.GetLeft() - 30, box.GetTop());
+			box.SetTopLeft(box.GetLeft() - MAP_SIZE, box.GetTop());
 		}
 		if (CMovingBitmap::IsOverlap(fin, box)) {
 			fin.SetFrameIndexOfBitmap(1);
