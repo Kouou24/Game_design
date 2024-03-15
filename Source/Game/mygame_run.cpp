@@ -62,10 +62,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	box.SetTopLeft(150+3*MAP_SIZE, 150+2*MAP_SIZE);
 
 	fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
-	fin.SetTopLeft(260, 265);
+	fin.SetTopLeft(150+MAP_SIZE*4, 150 + MAP_SIZE * 4);
 
-	chest_and_key.LoadBitmapByString({ "resources/chest.bmp", "resources/chest_ignore.bmp" }, RGB(255, 255, 255));
-	chest_and_key.SetTopLeft(150, 430);
 
 	bee.LoadBitmapByString({ "resources/bee_1.bmp", "resources/bee_2.bmp" });
 	bee.SetTopLeft(462, 265);
@@ -212,16 +210,6 @@ void CGameStateRun::OnShow()
 	show_text_by_phase();
 }
 
-void CGameStateRun::show_map() {
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
-			if (map[i][j] == 1) {
-				background_map[i][j].ShowBitmap();
-			}
-		}
-	}
-
-}
 void CGameStateRun::show_image_by_phase() {
 	if (phase <= 6) {
 		background.ShowBitmap();
@@ -246,6 +234,18 @@ void CGameStateRun::show_image_by_phase() {
 	}
 }
 
+
+void CGameStateRun::show_map() {
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			if (map[i][j] == 1) {
+				background_map[i][j].ShowBitmap();
+			}
+		}
+	}
+
+}
+
 void CGameStateRun::show_text_by_phase() {
 	CDC *pDC = CDDraw::GetBackCDC();
 
@@ -255,18 +255,18 @@ void CGameStateRun::show_text_by_phase() {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 1 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 2 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 26, 128, "下一個階段，讓長頸鹿能夠透過上下左右移動到這個位置！");
+		CTextDraw::Print(pDC, 26, 128, "關卡 : 2 / 20");
 		CTextDraw::Print(pDC, 373, 537, "按下 Enter 鍵來驗證");
 	} else if (phase == 3 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 205, 128, "幫你準備了一個寶箱");
-		CTextDraw::Print(pDC, 68, 162, "設計程式讓長頸鹿摸到寶箱後，將寶箱消失！");
-		CTextDraw::Print(pDC, 68, 196, "記得寶箱要去背，使用 RGB(255, 255, 255)");
-		CTextDraw::Print(pDC, 373, 537, "按下 Enter 鍵來驗證");
+		CTextDraw::Print(pDC, 205, 128, "");
+		CTextDraw::Print(pDC, 68, 162, "");
+		CTextDraw::Print(pDC, 68, 196, "");
+		CTextDraw::Print(pDC, 373, 537, "");
 	} else if (phase == 4 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 173, 128, "幫你準備了一個蜜蜂好朋友");
-		CTextDraw::Print(pDC, 89, 162, "已經幫它做了兩幀的動畫，讓它可以上下移動");
-		CTextDraw::Print(pDC, 110, 196, "寫個程式來讓你的蜜蜂好朋友擁有動畫！");
-		CTextDraw::Print(pDC, 373, 537, "按下 Enter 鍵來驗證");
+		CTextDraw::Print(pDC, 173, 128, "");
+		CTextDraw::Print(pDC, 89, 162, "");
+		CTextDraw::Print(pDC, 110, 196, "");
+		CTextDraw::Print(pDC, 373, 537, "");
 	} else if (phase == 5 && sub_phase == 1) {
 		CTextDraw::Print(pDC, 173, 128, "幫你準備了三扇門");
 		CTextDraw::Print(pDC, 89, 162, "設計程式讓長頸鹿摸到門之後，門會打開");
@@ -287,30 +287,22 @@ bool CGameStateRun::validate_phase_1() {
 }
 
 bool CGameStateRun::validate_phase_2() {
-	return character.GetTop() > 204 && character.GetTop() < 325 && character.GetLeft() > 339 && character.GetLeft() < 459;
+	return 0;
 }
 
 bool CGameStateRun::validate_phase_3() {
-	return (
-		character.GetTop() + character.GetHeight() >= chest_and_key.GetTop()
-		&& character.GetLeft() + character.GetWidth() >= chest_and_key.GetLeft()
-		&& chest_and_key.GetFrameIndexOfBitmap() == 1
-		&& chest_and_key.GetFilterColor() == RGB(255, 255, 255)
-	);
+	return 0;
 }
 
 bool CGameStateRun::validate_phase_4() {
-	return bee.IsAnimation() && bee.GetFrameSizeOfBitmap() == 2;
+	return 0;
 }
 
 bool CGameStateRun::validate_phase_5() {
-	bool check_all_door_is_open = true;
-	for (int i = 0; i < 3; i++) {
-		check_all_door_is_open &= (door[i].GetFrameIndexOfBitmap() == 1);
-	}
-	return check_all_door_is_open;
+
+	return 0;
 }
 
 bool CGameStateRun::validate_phase_6() {
-	return ball.IsAnimationDone() && !ball.IsAnimation() && ball.GetFrameIndexOfBitmap() == ball.GetFrameSizeOfBitmap() - 1;
+	return 0;
 }
