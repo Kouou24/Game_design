@@ -34,7 +34,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	background.LoadBitmapByString({
-		"resources/phase11_background.bmp",
+		"resources/background_all.bmp",
 		
 		});
 	background.SetTopLeft(0, 0);
@@ -42,8 +42,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 	ifstream ifs("map/Random.map");
 
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
 			ifs >> map[i][j];
 			if (map[i][j] == 1) {
 				background_map[i][j].LoadBitmapByString({ "resources/gress.bmp" });
@@ -68,7 +68,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 				background_map[i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
 
 				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-				character.SetTopLeft(150, 150);
+				character.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
 
 			}
 			if (map[i][j] == 5) {
@@ -133,7 +133,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		fin.SetFrameIndexOfBitmap(1);
 		win_flag = true;
 	}
-
+	/*if (CMovingBitmap::IsOverlap(character, wall)) {
+		fin.SetFrameIndexOfBitmap(1);
+	}*/
 		
 
 	}
@@ -219,8 +221,8 @@ void CGameStateRun::show_text_by_phase() {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 1 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 2 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 26, 128, "關卡 : 2 / 20");
-		CTextDraw::Print(pDC, 373, 537, "按下 Enter 鍵來驗證");
+		CTextDraw::Print(pDC, 50, 20, "關卡 : 2 / 20");
+		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 3 && sub_phase == 1) {
 		CTextDraw::Print(pDC, 205, 128, "");
 		CTextDraw::Print(pDC, 68, 162, "");
@@ -270,8 +272,8 @@ void CGameStateRun::reset_phase() {
 
 	ifstream ifs("map/Random.map");
 
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
+	for (int j = 0; j < 5; j++) {
+		for (int i = 0; i < 5; i++) {
 			ifs >> map[i][j];
 
 			if (map[i][j] == 3) {
@@ -281,7 +283,7 @@ void CGameStateRun::reset_phase() {
 			}
 			if (map[i][j] == 4) {
 
-				character.SetTopLeft(150, 150);
+				character.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
 
 			}
 			if (map[i][j] == 5) {
