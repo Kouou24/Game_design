@@ -248,8 +248,9 @@ void CGameStateRun::show_text_by_phase() {
 	CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(0, 0, 0), 800);
 
 	if (phase == 1 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 1 / 20");
+		CTextDraw::Print(pDC, 50, 20, "level : 1 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
+		CTextDraw::Print(pDC, 150, 430, "Press R to reset map");
 	} else if (phase == 2 && sub_phase == 1) {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 2 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
