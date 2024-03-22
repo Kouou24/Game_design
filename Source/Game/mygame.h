@@ -97,6 +97,8 @@ namespace game_framework {
 		int map[5][5];
 		int last_x;
 		int last_y;
+		int lastbox_x;
+		int lastbox_y;
 		CMovingBitmap background_map[5][5];
 		CMovingBitmap background;
 		CMovingBitmap character;
