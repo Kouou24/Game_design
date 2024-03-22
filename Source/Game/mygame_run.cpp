@@ -33,6 +33,9 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
+	CAudio::Instance()->Load(1, "music/push_sound.mp3");
+	CAudio::Instance()->Load(2, "music/win_sound.mp3");
+
 	background.LoadBitmapByString({
 		"resources/background_all.bmp",
 		
@@ -125,22 +128,27 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_UP) {
+		CAudio::Instance()->Play(1, false);
 		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft(), box.GetTop() - MAP_SIZE);
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_DOWN) {
+		CAudio::Instance()->Play(1, false);
 		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft(), box.GetTop() + MAP_SIZE);
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_RIGHT) {
+		CAudio::Instance()->Play(1, false);
 		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft() + MAP_SIZE, box.GetTop());
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_LEFT) {
+		CAudio::Instance()->Play(1, false);
 		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft() - MAP_SIZE, box.GetTop());
 	}
 	if (CMovingBitmap::IsOverlap(fin, box)) {
+		CAudio::Instance()->Play(2, false);
 		fin.SetFrameIndexOfBitmap(1);
 		win_flag = true;
 	}

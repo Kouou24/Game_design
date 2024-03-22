@@ -25,7 +25,8 @@ void CGameStateInit::OnInit()
 	//
 	ShowInitProgress(0, "Start Initialize...");	// 一開始的loading進度為0%
 	Sleep(200);
-
+	//CAudio::Instance()->Load(0, "music/main.mp3");
+	//CAudio::Instance()->Play(0, true);
 	load_background();
 
 	ShowInitProgress(66, "Initialize...");
