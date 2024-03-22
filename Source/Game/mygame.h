@@ -95,6 +95,8 @@ namespace game_framework {
 		int phase = 1;
 		int sub_phase = 1;
 		int map[5][5];
+		int last_x;
+		int last_y;
 		CMovingBitmap background_map[5][5];
 		CMovingBitmap background;
 		CMovingBitmap character;
@@ -104,6 +106,7 @@ namespace game_framework {
 		CMovingBitmap bee;
 		CMovingBitmap ball;
 		CMovingBitmap door[3];
+		vector<CMovingBitmap> wall;
 		bool win_flag = false;
 		void show_map();
 		void phase_control();

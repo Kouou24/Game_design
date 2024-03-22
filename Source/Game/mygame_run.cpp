@@ -50,8 +50,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 				background_map[i][j].SetTopLeft(MAP_SIZE*i+150, MAP_SIZE*j+150);
 			}
 			if (map[i][j] == 2) {
-				background_map[i][j].LoadBitmapByString({ "resources/wall.bmp" });
-				background_map[i][j].SetTopLeft(MAP_SIZE*i+150, MAP_SIZE*j+150);
+
+				background_map[i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
+
+				wall.push_back(CMovingBitmap());
+				wall[wall.size() - 1].LoadBitmapByString({ "resources/wall.bmp" });
+				wall[wall.size() - 1].SetTopLeft(MAP_SIZE*i+150, MAP_SIZE*j+150);
 			}
 			if (map[i][j] == 3) {
 
@@ -99,23 +104,25 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
+	
 	if (nChar == 0x52){
 		reset_phase();
 	}
 	if (nChar == VK_UP) {
 		character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
+		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_DOWN) {
 		character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
-
+		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_RIGHT) {
 		character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
-
+		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_LEFT) {
 		character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
-
+		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_UP) {
 		box.SetTopLeft(box.GetLeft(), box.GetTop() - MAP_SIZE);
@@ -132,6 +139,13 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if (CMovingBitmap::IsOverlap(fin, box)) {
 		fin.SetFrameIndexOfBitmap(1);
 		win_flag = true;
+	}
+	for (int i = 0; i<int(wall.size()); i++) {
+		if (CMovingBitmap::IsOverlap(character, wall[i])) {
+			character.SetTopLeft(last_x, last_y);
+			last_x = box.GetLeft();
+			last_y = box.GetTop();
+		}
 	}
 	/*if (CMovingBitmap::IsOverlap(character, wall)) {
 		fin.SetFrameIndexOfBitmap(1);
@@ -184,18 +198,12 @@ void CGameStateRun::show_image_by_phase() {
 		box.ShowBitmap();
 
 		if (phase == 3 && sub_phase == 1) {
-			chest_and_key.ShowBitmap();
 		}
 		if (phase == 4 && sub_phase == 1) {
-			bee.ShowBitmap();
 		}
 		if (phase == 5 && sub_phase == 1) {
-			for (int i = 0; i < 3; i++) {
-				door[i].ShowBitmap();
-			}
 		}
 		if (phase == 6 && sub_phase == 1) {
-			ball.ShowBitmap();
 		}
 	}
 }
@@ -209,7 +217,9 @@ void CGameStateRun::show_map() {
 			
 		}
 	}
-
+	for (int i = 0; i < int(wall.size()); i++) {
+		wall[i].ShowBitmap();
+	}
 }
 
 void CGameStateRun::show_text_by_phase() {
