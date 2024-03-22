@@ -109,31 +109,35 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		reset_phase();
 	}
 	if (nChar == VK_UP) {
+		last_x = character.GetLeft(), last_y = character.GetTop();
 		character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
-		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_DOWN) {
+		last_x = character.GetLeft(), last_y = character.GetTop();
 		character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
-		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_RIGHT) {
+		last_x = character.GetLeft(), last_y = character.GetTop();
 		character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
-		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (nChar == VK_LEFT) {
+		last_x = character.GetLeft(), last_y = character.GetTop();
 		character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
-		last_x = box.GetLeft(), last_y = box.GetTop();
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_UP) {
+		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft(), box.GetTop() - MAP_SIZE);
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_DOWN) {
+		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft(), box.GetTop() + MAP_SIZE);
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_RIGHT) {
+		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft() + MAP_SIZE, box.GetTop());
 	}
 	if (CMovingBitmap::IsOverlap(character, box) && nChar == VK_LEFT) {
+		lastbox_x = box.GetLeft(), lastbox_y = box.GetTop();
 		box.SetTopLeft(box.GetLeft() - MAP_SIZE, box.GetTop());
 	}
 	if (CMovingBitmap::IsOverlap(fin, box)) {
@@ -143,9 +147,18 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	for (int i = 0; i<int(wall.size()); i++) {
 		if (CMovingBitmap::IsOverlap(character, wall[i])) {
 			character.SetTopLeft(last_x, last_y);
-			last_x = box.GetLeft();
-			last_y = box.GetTop();
+			last_x = character.GetLeft();
+			last_y = character.GetTop();
 		}
+		if (CMovingBitmap::IsOverlap(box, wall[i])) {
+			box.SetTopLeft(lastbox_x, lastbox_y);
+			lastbox_x = box.GetLeft();
+			lastbox_y = box.GetTop();
+			character.SetTopLeft(last_x, last_y);
+			last_x = character.GetLeft();
+			last_y = character.GetTop();
+		}
+
 	}
 	/*if (CMovingBitmap::IsOverlap(character, wall)) {
 		fin.SetFrameIndexOfBitmap(1);
