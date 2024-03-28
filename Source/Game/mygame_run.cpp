@@ -88,6 +88,15 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 				fin.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
 
 			}
+			if (map[i][j] == 6) {
+
+				background_map[i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
+
+				bomb.LoadBitmapByString({ "resources/bomb.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
+				bomb.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
+
+			}
 		}
 	}
 	ifs.close();
@@ -213,6 +222,7 @@ void CGameStateRun::show_image_by_phase() {
 	if (phase <= 6) {
 		background.ShowBitmap();
 		show_map();
+		bomb.ShowBitmap();
 		fin.ShowBitmap();
 		character.ShowBitmap();
 		box.ShowBitmap();
@@ -316,6 +326,11 @@ void CGameStateRun::reset_phase() {
 			if (map[i][j] == 5) {
 				fin.SetFrameIndexOfBitmap(0);
 				fin.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
+
+			}
+			if (map[i][j] == 6) {
+				bomb.SetFrameIndexOfBitmap(0);
+				bomb.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * i);
 
 			}
 		}

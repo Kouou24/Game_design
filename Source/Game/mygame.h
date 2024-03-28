@@ -104,6 +104,7 @@ namespace game_framework {
 		CMovingBitmap character;
 		CMovingBitmap box;
 		CMovingBitmap fin;
+		CMovingBitmap bomb;
 		CMovingBitmap chest_and_key;
 		CMovingBitmap bee;
 		CMovingBitmap ball;
