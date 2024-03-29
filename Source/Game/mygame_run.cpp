@@ -192,19 +192,6 @@ void game_framework::CGameStateRun::load_background()
 	reset_phase(0);
 }
 
-void CGameStateRun::show_map() {
-	int k = 0;
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
-
-				background_map[k][i][j].ShowBitmap();
-			
-		}
-	}
-	for (int i = 0; i < int(wall.size()); i++) {
-		wall[i].ShowBitmap();
-	}
-}
 
 void CGameStateRun::show_text_by_phase() {
 	CDC *pDC = CDDraw::GetBackCDC();
@@ -235,6 +222,59 @@ void CGameStateRun::show_text_by_phase() {
 }
 
 
+
+
+
+
+void CGameStateRun::reset_phase(int phase_chose) {
+	wall.clear();
+	int k = phase_chose;
+	for (size_t i = 0; i < map[k].size() ; i++) {
+		for (size_t j = 0; j < map[k][i].size() ; j++) {
+			if (map[k][i][j] == 1) {
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+			}
+			if (map[k][i][j] == 2) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+
+				wall.push_back(CMovingBitmap());
+				wall[wall.size() - 1].LoadBitmapByString({ "resources/wall.bmp" });
+				wall[wall.size() - 1].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+			}
+			if (map[k][i][j] == 3) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+
+				box.LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
+				box.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
+
+			}
+			if (map[k][i][j] == 4) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+
+				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
+				character.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
+
+			}
+			if (map[k][i][j] == 5) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+
+				fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
+				fin.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
+				fin.SetFrameIndexOfBitmap(0);
+
+			}
+		}
+	}
+}
 
 
 void CGameStateRun::phase_control() {
@@ -314,55 +354,16 @@ void CGameStateRun::phase_control() {
 }
 
 
+void CGameStateRun::show_map() {
+	int k = phase - 1;
+	for (size_t i = 0; i < map[k].size(); i++) {
+		for (size_t j = 0; j < map[k][i].size(); j++) {
 
+			background_map[k][i][j].ShowBitmap();
 
-void CGameStateRun::reset_phase(int phase_chose) {
-
-	int k = phase_chose;
-	for (size_t i = 0; i < map[k].size() ; i++) {
-		for (size_t j = 0; j < map[k][i].size() ; j++) {
-			if (map[k][i][j] == 1) {
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-			}
-			if (map[k][i][j] == 2) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-
-				wall.push_back(CMovingBitmap());
-				wall[wall.size() - 1].LoadBitmapByString({ "resources/wall.bmp" });
-				wall[wall.size() - 1].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-			}
-			if (map[k][i][j] == 3) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-
-				box.LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
-				box.SetTopLeft(150 + i * MAP_SIZE, 150 + j * MAP_SIZE);
-
-			}
-			if (map[k][i][j] == 4) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-
-				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-				character.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * j);
-
-			}
-			if (map[k][i][j] == 5) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*i + 150, MAP_SIZE*j + 150);
-
-				fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
-				fin.SetTopLeft(150 + MAP_SIZE * i, 150 + MAP_SIZE * j);
-				fin.SetFrameIndexOfBitmap(0);
-
-			}
 		}
 	}
+	for (int i = 0; i < int(wall.size()); i++) {
+		wall[i].ShowBitmap();
+	}
 }
-
