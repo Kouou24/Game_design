@@ -25,6 +25,7 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
+	CAudio::Instance()->Play(3, true);
 }
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
@@ -35,6 +36,8 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
 	CAudio::Instance()->Load(1, "music/push_sound.mp3");
 	CAudio::Instance()->Load(2, "music/win_sound.mp3");
+	CAudio::Instance()->Load(3, "music/game.mp3");
+
 
 	background.LoadBitmapByString({
 		"resources/background_all.bmp",
@@ -51,7 +54,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	
 	if (nChar == 0x52){
-		reset_phase(phase);
+		reset_phase(phase-1); //關卡減1
+	}
+
+	if (nChar == 0x51) {
+		win_flag = true;
 	}
 	if (nChar == VK_UP) {
 		last_x = character.GetLeft(), last_y = character.GetTop();
@@ -145,7 +152,6 @@ void CGameStateRun::OnShow()
 {
 	phase_control();
 	show_image_by_phase();
-	
 	show_text_by_phase();
 }
 
@@ -157,14 +163,6 @@ void CGameStateRun::show_image_by_phase() {
 		character.ShowBitmap();
 		box.ShowBitmap();
 
-		if (phase == 3 && sub_phase == 1) {
-		}
-		if (phase == 4 && sub_phase == 1) {
-		}
-		if (phase == 5 && sub_phase == 1) {
-		}
-		if (phase == 6 && sub_phase == 1) {
-		}
 	}
 }
 
@@ -174,7 +172,7 @@ void game_framework::CGameStateRun::load_background()
 	ifstream ifs("map/Random.map");
 
 	int i_max, j_max,c;
-	for (int k = 0; k < 2; k++) {  //初始化 地圖數量=k
+	for (int k = 0; k < 6; k++) {  //初始化 地圖數量=k
 		ifs >> i_max;
 		ifs >> j_max;
 		map.push_back(vector<vector<int> >());
@@ -220,49 +218,22 @@ void CGameStateRun::show_text_by_phase() {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 2 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 3 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 205, 128, "");
-		CTextDraw::Print(pDC, 68, 162, "");
-		CTextDraw::Print(pDC, 68, 196, "");
-		CTextDraw::Print(pDC, 373, 537, "");
+		CTextDraw::Print(pDC, 50, 20, "關卡 : 3 / 20");
+		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 4 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 173, 128, "");
-		CTextDraw::Print(pDC, 89, 162, "");
-		CTextDraw::Print(pDC, 110, 196, "");
-		CTextDraw::Print(pDC, 373, 537, "");
+		CTextDraw::Print(pDC, 50, 20, "關卡 : 4 / 20");
+		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 5 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 173, 128, "");
-		CTextDraw::Print(pDC, 89, 162, "");
-		CTextDraw::Print(pDC, 373, 537, "");
+		CTextDraw::Print(pDC, 50, 20, "關卡 : 5 / 20");
+		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 6 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 173, 128, "");
-		CTextDraw::Print(pDC, 89, 162, "");
-		CTextDraw::Print(pDC, 373, 537, "");
+		CTextDraw::Print(pDC, 50, 20, "關卡 : 6 / 20");
+		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} 
 
 	CDDraw::ReleaseBackCDC();
 }
 
-
-bool CGameStateRun::validate_phase_2() {
-	return 0;
-}
-
-bool CGameStateRun::validate_phase_3() {
-	return 0;
-}
-
-bool CGameStateRun::validate_phase_4() {
-	return 0;
-}
-
-bool CGameStateRun::validate_phase_5() {
-
-	return 0;
-}
-
-bool CGameStateRun::validate_phase_6() {
-	return 0;
-}
 
 
 
@@ -275,52 +246,68 @@ void CGameStateRun::phase_control() {
 		else if (sub_phase == 2) {
 			sub_phase = 1;
 			phase += 1;
+			win_flag = 0;
+
 			reset_phase(1);
 		}
 	}
 	else if (phase == 2) {
 		if (sub_phase == 1) {
-			sub_phase += validate_phase_2();
+			sub_phase += win_flag;
 		}
 		else if (sub_phase == 2) {
 			sub_phase = 1;
+			win_flag = 0;
 			phase += 1;
+
+			reset_phase(2);
 		}
 	}
 	else if (phase == 3) {
 		if (sub_phase == 1) {
-			sub_phase += validate_phase_3();
+			sub_phase += win_flag;
 		}
 		else if (sub_phase == 2) {
 			sub_phase = 1;
+			win_flag = 0;
 			phase += 1;
+
+			reset_phase(3);
 		}
 	}
 	else if (phase == 4) {
 		if (sub_phase == 1) {
-			sub_phase += validate_phase_4();
+			sub_phase += win_flag;
 		}
 		else if (sub_phase == 2) {
 			sub_phase = 1;
+			win_flag = 0;
 			phase += 1;
+
+			reset_phase(4);
 		}
 	}
 	else if (phase == 5) {
 		if (sub_phase == 1) {
-			sub_phase += validate_phase_5();
+			sub_phase += win_flag;
 		}
 		else if (sub_phase == 2) {
 			sub_phase = 1;
+			win_flag = 0;
 			phase += 1;
+
+			reset_phase(5);
 		}
 	}
 	else if (phase == 6) {
 		if (sub_phase == 1) {
-			sub_phase += validate_phase_6();
+			sub_phase += win_flag;
 		}
 		else if (sub_phase == 2) {
 			sub_phase = 1;
+			win_flag = 0;
 			phase += 1;
+
 			GotoGameState(GAME_STATE_OVER);
 		}
 	}

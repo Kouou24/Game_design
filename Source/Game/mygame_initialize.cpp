@@ -24,9 +24,10 @@ void CGameStateInit::OnInit()
 	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
 	//
 	ShowInitProgress(0, "Start Initialize...");	// 一開始的loading進度為0%
+
 	Sleep(200);
-	//CAudio::Instance()->Load(0, "music/main.mp3");
-	//CAudio::Instance()->Play(0, true);
+	CAudio::Instance()->Load(0, "music/main.mp3");
+	CAudio::Instance()->Play(0, true);
 	load_background();
 
 	ShowInitProgress(66, "Initialize...");
@@ -45,6 +46,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if(nChar == VK_RETURN)
 	{
+		CAudio::Instance()->Stop(0);
 		GotoGameState(GAME_STATE_RUN); // 切換至GAME_STATE_RUN
 	}
 }
