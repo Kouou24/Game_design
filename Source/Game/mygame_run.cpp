@@ -45,6 +45,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		});
 	background.SetTopLeft(0, 0);
 
+	dead.LoadBitmapByString({
+		"resources/fin_ignore.bmp",
+		"resources/dead.bmp",
+		}, RGB(255, 255, 255));
+	dead.SetTopLeft(0, 0);
+
+
 	load_background();
 
 
@@ -100,6 +107,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		CAudio::Instance()->Play(2, false);
 		fin.SetFrameIndexOfBitmap(1);
 		win_flag = true;
+	}
+	if (bomb.IsBitmapLoaded()) {
+		if (CMovingBitmap::IsOverlap(character, bomb)) {
+			dead.SetFrameIndexOfBitmap(1);
+		}
 	}
 	for (int i = 0; i<int(wall.size()); i++) {
 		if (CMovingBitmap::IsOverlap(character, wall[i])) {
@@ -160,8 +172,12 @@ void CGameStateRun::show_image_by_phase() {
 		background.ShowBitmap();
 		show_map();
 		fin.ShowBitmap();
+		if (bomb.IsBitmapLoaded()) {
+			bomb.ShowBitmap();
+		}
 		character.ShowBitmap();
 		box.ShowBitmap();
+		dead.ShowBitmap();
 
 	}
 }
@@ -228,6 +244,7 @@ void CGameStateRun::show_text_by_phase() {
 
 void CGameStateRun::reset_phase(int phase_chose) {
 	wall.clear();
+	dead.SetFrameIndexOfBitmap(0);
 	int k = phase_chose;
 	for (size_t i = 0; i < map[k].size() ; i++) {
 		for (size_t j = 0; j < map[k][i].size() ; j++) {
@@ -270,6 +287,16 @@ void CGameStateRun::reset_phase(int phase_chose) {
 				fin.LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
 				fin.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
 				fin.SetFrameIndexOfBitmap(0);
+
+			}
+			if (map[k][i][j] == 6) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+
+				bomb.LoadBitmapByString({ "resources/bomb.bmp", "resources/bomb_ignore.bmp" }, RGB(255, 255, 255));
+				bomb.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
+				bomb.SetFrameIndexOfBitmap(0);
 
 			}
 		}

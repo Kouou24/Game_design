@@ -104,11 +104,8 @@ namespace game_framework {
 		CMovingBitmap character;
 		CMovingBitmap box;
 		CMovingBitmap fin;
-		CMovingBitmap chest_and_key;
-		CMovingBitmap bee;
 		CMovingBitmap bomb;
-		CMovingBitmap ball;
-		CMovingBitmap door[3];
+		CMovingBitmap dead;
 		vector<CMovingBitmap> wall;
 		bool win_flag = false;
 		void load_background();
