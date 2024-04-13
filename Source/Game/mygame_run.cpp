@@ -93,13 +93,91 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
+	int gg = int(fin.size())  , k = 0;
+	for (int j = 0; j < int(box.size()); j++) {
+
+
+
+
+		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
+			CAudio::Instance()->Play(1, false);
+			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
+			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() - MAP_SIZE);
+		}
+		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_DOWN) {
+			CAudio::Instance()->Play(1, false);
+			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
+			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() + MAP_SIZE);
+		}
+		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_RIGHT) {
+			CAudio::Instance()->Play(1, false);
+			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
+			box[j].SetTopLeft(box[j].GetLeft() + MAP_SIZE, box[j].GetTop());
+		}
+		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_LEFT) {
+			CAudio::Instance()->Play(1, false);
+			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
+			box[j].SetTopLeft(box[j].GetLeft() - MAP_SIZE, box[j].GetTop());
+		}
+		
+
+		for (int i = 0; i<int(box.size()); i++) {
+
+			
+				if (i == j) continue;
+				if (CMovingBitmap::IsOverlap(box[j], box[i])) {
+					character.SetTopLeft(last_x, last_y);
+					last_x = character.GetLeft();
+					last_y = character.GetTop();
+
+					box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
+					lastbox_x[j] = box[j].GetLeft();
+					lastbox_y[j] = box[j].GetTop();
+
+					box[i].SetTopLeft(lastbox_x[i], lastbox_y[i]);
+					lastbox_x[i] = box[i].GetLeft();
+					lastbox_y[i] = box[i].GetTop();
+				}
+			
+		}
+
+
+		if (bomb.size() > 0) {
+			for (int i = 0; i < int(bomb.size()); i++) {
+				if (CMovingBitmap::IsOverlap(box[j], bomb[i])) {
+
+					character.SetTopLeft(last_x, last_y);
+					last_x = character.GetLeft();
+					last_y = character.GetTop();
+
+					box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
+					lastbox_x[j] = box[j].GetLeft();
+					lastbox_y[j] = box[j].GetTop();
+
+				}
+			}
+		}
+
+		for (int i = 0; i < int(fin.size()); i++) {
+
+			if ((CMovingBitmap::IsOverlap(fin[i], box[j]))) {
+				k++;
+			}
+			if (k == gg) {
+				CAudio::Instance()->Play(2, false);
+				//fin[i].SetFrameIndexOfBitmap(1);
+				win_flag = true;
+			}
+			
+		}
+	}
+
 	for (int i = 0; i<int(wall.size()); i++) {
 		if (CMovingBitmap::IsOverlap(character, wall[i])) {
 			character.SetTopLeft(last_x, last_y);
 			last_x = character.GetLeft();
 			last_y = character.GetTop();
 		}
-
 		for (int j = 0; j < int(box.size()); j++) {
 
 			if (CMovingBitmap::IsOverlap(box[j], wall[i])) {
@@ -114,46 +192,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
-	int gg = int(fin.size())  , k = 0;
-	for (int j = 0; j < int(box.size()); j++) {
 
 
-
-
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
-			CAudio::Instance()->Play(1, false);
-			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() - MAP_SIZE);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_DOWN) {
-			CAudio::Instance()->Play(1, false);
-			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() + MAP_SIZE);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_RIGHT) {
-			CAudio::Instance()->Play(1, false);
-			box[j].SetTopLeft(box[j].GetLeft() + MAP_SIZE, box[j].GetTop());
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_LEFT) {
-			CAudio::Instance()->Play(1, false);
-			box[j].SetTopLeft(box[j].GetLeft() - MAP_SIZE, box[j].GetTop());
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-		}
-		
-		for (int i = 0; i < int(fin.size()); i++) {
-
-			if ((CMovingBitmap::IsOverlap(fin[i], box[j]))) {
-				k++;
-			}
-			if (k == gg) {
-				CAudio::Instance()->Play(2, false);
-				//fin[i].SetFrameIndexOfBitmap(1);
-				win_flag = true;
-			}
-			
-		}
-	}
 }
 
 
