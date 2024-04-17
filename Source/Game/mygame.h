@@ -106,8 +106,10 @@ namespace game_framework {
 		vector<CMovingBitmap> fin;
 		vector<CMovingBitmap> bomb;
 		CMovingBitmap dead;
+		CMovingBitmap load;
 		vector<CMovingBitmap> wall;
 		bool win_flag = false;
+		bool while_load = false;
 		void load_background();
 		void show_map();
 		void phase_control();
@@ -132,8 +134,12 @@ namespace game_framework {
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
+		CMovingBitmap giraffe;
+		CMovingBitmap man;
+		CMovingBitmap bee;
 		CMovingBitmap background;
 		void load_background();
+
 	};
 
 }

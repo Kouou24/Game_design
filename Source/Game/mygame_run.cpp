@@ -45,6 +45,12 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		});
 	background.SetTopLeft(0, 0);
 
+	load.LoadBitmapByString({
+		"resources/fin_ignore.bmp",
+		"resources/loading.bmp",
+		}, RGB(255, 255, 255));
+	load.SetTopLeft(0, 0);
+
 	dead.LoadBitmapByString({
 		"resources/fin_ignore.bmp",
 		"resources/dead.bmp",
@@ -61,6 +67,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	
 	if (nChar == 0x52){
+		while_load = false;
+		load.SetFrameIndexOfBitmap(0);
 		reset_phase(phase-1); //關卡減1
 	}
 
@@ -95,9 +103,6 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	int gg = int(fin.size())  , k = 0;
 	for (int j = 0; j < int(box.size()); j++) {
-
-
-
 
 		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
 			CAudio::Instance()->Play(1, false);
@@ -165,8 +170,15 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 			if (k == gg) {
 				CAudio::Instance()->Play(2, false);
+				load.SetFrameIndexOfBitmap(1);
+				while_load = true;
+				if (nChar == 0x4A) {
+					win_flag = true;
+					while_load = false;
+					load.SetFrameIndexOfBitmap(0);
+				}
 				//fin[i].SetFrameIndexOfBitmap(1);
-				win_flag = true;
+				//win_flag = true;
 			}
 			
 		}
@@ -248,7 +260,7 @@ void CGameStateRun::show_image_by_phase() {
 			box[i].ShowBitmap();
 		}
 		dead.ShowBitmap();
-
+		load.ShowBitmap();
 	}
 }
 
@@ -283,8 +295,10 @@ void CGameStateRun::show_text_by_phase() {
 	CDC *pDC = CDDraw::GetBackCDC();
 
 	CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(0, 0, 0), 800);
-
-	if (phase == 1 && sub_phase == 1) {
+	if (while_load) {
+		CTextDraw::Print(pDC, 50, 20, "");
+	}
+	else if (phase == 1 && sub_phase == 1) {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 1 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} else if (phase == 2 && sub_phase == 1) {
