@@ -49,7 +49,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		"resources/fin_ignore.bmp",
 		"resources/loading.bmp",
 		}, RGB(255, 255, 255));
-	load.SetTopLeft(0, 0);
+	load.SetTopLeft(-10, 0);
 
 	dead.LoadBitmapByString({
 		"resources/fin_ignore.bmp",
@@ -173,6 +173,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				load.SetFrameIndexOfBitmap(1);
 				while_load = true;
 				if (nChar == 0x4A) {
+					CAudio::Instance()->Stop(2);
 					win_flag = true;
 					while_load = false;
 					load.SetFrameIndexOfBitmap(0);
