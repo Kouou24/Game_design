@@ -8,6 +8,8 @@
 #include "mygame.h"
 #include <fstream>
 #include "config.h"
+#include <string>
+
 
 using namespace game_framework;
 
@@ -244,7 +246,7 @@ void CGameStateRun::OnShow()
 }
 
 void CGameStateRun::show_image_by_phase() {
-	if (phase <= 6) {
+	if (phase <= MAP_COUNT) {
 		background.ShowBitmap();
 		show_map();
 		for (int i = 0; i < int(fin.size()); i++) {
@@ -271,7 +273,7 @@ void game_framework::CGameStateRun::load_background()
 	ifstream ifs("map/Random.map");
 
 	int i_max, j_max,c;
-	for (int k = 0; k < 6; k++) {  //初始化 地圖數量=k
+	for (int k = 0; k < MAP_COUNT; k++) {  //初始化 地圖數量=k
 		ifs >> i_max;
 		ifs >> j_max;
 		map.push_back(vector<vector<int> >());
@@ -296,6 +298,26 @@ void CGameStateRun::show_text_by_phase() {
 	CDC *pDC = CDDraw::GetBackCDC();
 
 	CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(0, 0, 0), 800);
+	for (int p = 1; p <= MAP_COUNT; p++) {
+		if (while_load) {
+			CTextDraw::Print(pDC, 50, 20, "");
+		}
+		
+		else if (phase == p && sub_phase == 1) {
+			
+			CTextDraw::Print(pDC, 50, 20, "關卡 : "+ std::to_string(p) +"/ 20");
+			CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
+		}
+	}
+	if (while_load) {
+		CTextDraw::Print(pDC, 50, 20, "");
+	}
+	else if (phase == 1)
+	{
+		CTextDraw::Print(pDC, 150, 450, "hint : press R to reset");
+
+	}
+	/*
 	if (while_load) {
 		CTextDraw::Print(pDC, 50, 20, "");
 	}
@@ -318,7 +340,7 @@ void CGameStateRun::show_text_by_phase() {
 		CTextDraw::Print(pDC, 50, 20, "關卡 : 6 / 20");
 		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 	} 
-
+	*/
 	CDDraw::ReleaseBackCDC();
 }
 
@@ -336,50 +358,50 @@ void CGameStateRun::reset_phase(int phase_chose) {
 	lastbox_x.clear();
 	dead.SetFrameIndexOfBitmap(0);
 	int k = phase_chose;
-	for (size_t i = 0; i < map[k].size() ; i++) {
-		for (size_t j = 0; j < map[k][i].size() ; j++) {
+	for (size_t i = 0; i < map[k].size(); i++) {
+		for (size_t j = 0; j < map[k][i].size(); j++) {
 			if (map[k][i][j] == 1) {
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 			}
 			if (map[k][i][j] == 2) {
 
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 				wall.push_back(CMovingBitmap());
 				wall[wall.size() - 1].LoadBitmapByString({ "resources/wall.bmp" });
-				wall[wall.size() - 1].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				wall[wall.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 			}
 			if (map[k][i][j] == 3) {
 
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
-				
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+
 				box.push_back(CMovingBitmap());
 				box[box.size() - 1].LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
-				box[box.size() - 1].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
-				lastbox_x.push_back(MAP_SIZE*j + 150);
-				lastbox_y.push_back(MAP_SIZE*i + 150);
+				box[box.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+				lastbox_x.push_back(MAP_SIZE*j + 120);
+				lastbox_y.push_back(MAP_SIZE*i + 120);
 			}
 			if (map[k][i][j] == 4) {
 
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-				character.SetTopLeft(150 + MAP_SIZE * j, 150 + MAP_SIZE * i);
+				character.SetTopLeft(120 + MAP_SIZE * j, 120 + MAP_SIZE * i);
 
 			}
 			if (map[k][i][j] == 5) {
 
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 
 				fin.push_back(CMovingBitmap());
 				fin[fin.size() - 1].LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
-				fin[fin.size() - 1].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				fin[fin.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 				fin[fin.size() - 1].SetFrameIndexOfBitmap(0);
 
 
@@ -387,12 +409,30 @@ void CGameStateRun::reset_phase(int phase_chose) {
 			if (map[k][i][j] == 6) {
 
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 				bomb.push_back(CMovingBitmap());
 				bomb[bomb.size() - 1].LoadBitmapByString({ "resources/bomb.bmp", "resources/bomb_ignore.bmp" }, RGB(255, 255, 255));
-				bomb[bomb.size() - 1].SetTopLeft(MAP_SIZE*j + 150, MAP_SIZE*i + 150);
+				bomb[bomb.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 				bomb[bomb.size() - 1].SetFrameIndexOfBitmap(0);
+
+
+			}
+			if (map[k][i][j] == 7) {
+
+				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+
+				box.push_back(CMovingBitmap());
+				box[box.size() - 1].LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
+				box[box.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+				lastbox_x.push_back(MAP_SIZE*j + 120);
+				lastbox_y.push_back(MAP_SIZE*i + 120);
+
+				fin.push_back(CMovingBitmap());
+				fin[fin.size() - 1].LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
+				fin[fin.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+				fin[fin.size() - 1].SetFrameIndexOfBitmap(0);
 
 
 			}
@@ -402,78 +442,24 @@ void CGameStateRun::reset_phase(int phase_chose) {
 
 
 void CGameStateRun::phase_control() {
+	for (int g = 1; g <= MAP_COUNT; g++) {
+		if (phase == g) {
+			if (sub_phase == 1) {
+				sub_phase += win_flag;
+			}
+			else if (sub_phase == 2) {
+				sub_phase = 1;
+				phase += 1;
+				win_flag = 0;
+				reset_phase(g);
 
-	if (phase == 1) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
+				if (phase == MAP_COUNT) {
+					GotoGameState(GAME_STATE_OVER);
+				}
+				
+			}
 		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			phase += 1;
-			win_flag = 0;
 
-			reset_phase(1);
-		}
-	}
-	else if (phase == 2) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
-		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			win_flag = 0;
-			phase += 1;
-
-			reset_phase(2);
-		}
-	}
-	else if (phase == 3) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
-		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			win_flag = 0;
-			phase += 1;
-
-			reset_phase(3);
-		}
-	}
-	else if (phase == 4) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
-		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			win_flag = 0;
-			phase += 1;
-
-			reset_phase(4);
-		}
-	}
-	else if (phase == 5) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
-		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			win_flag = 0;
-			phase += 1;
-
-			reset_phase(5);
-		}
-	}
-	else if (phase == 6) {
-		if (sub_phase == 1) {
-			sub_phase += win_flag;
-		}
-		else if (sub_phase == 2) {
-			sub_phase = 1;
-			win_flag = 0;
-			phase += 1;
-
-			GotoGameState(GAME_STATE_OVER);
-		}
 	}
 }
 
