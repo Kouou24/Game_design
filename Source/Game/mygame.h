@@ -88,6 +88,7 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
+
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -101,6 +102,8 @@ namespace game_framework {
 		vector<int> lastbox_y;
 		vector<vector<vector< CMovingBitmap> > > background_map;
 		CMovingBitmap background;
+		CMovingBitmap map_menu;
+		CMovingBitmap menu_box;
 		CMovingBitmap character;
 		vector<CMovingBitmap> box;
 		vector<CMovingBitmap> fin;
@@ -110,6 +113,7 @@ namespace game_framework {
 		vector<CMovingBitmap> wall;
 		bool win_flag = false;
 		bool while_load = false;
+		bool while_menu = true;
 		void load_background();
 		void show_map();
 		void phase_control();
