@@ -65,7 +65,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		"resources/menu.bmp",
 
 		}, RGB(255, 255, 255));
-	map_menu.SetTopLeft(0, 0);
+	map_menu.SetTopLeft(-10, -10);
 
 
 	menu_box.LoadBitmapByString({
@@ -73,7 +73,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 		"resources/select_box.bmp",
 
 		}, RGB(255, 255, 255));
-	menu_box.SetTopLeft(90, 96);
+	menu_box.SetTopLeft(80, 86);
 
 
 	map_menu.SetFrameIndexOfBitmap(1);
@@ -101,7 +101,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		while_menu = true;
 		map_menu.SetFrameIndexOfBitmap(1);
 		menu_box.SetFrameIndexOfBitmap(1);
-		menu_box.SetTopLeft(90, 96);
+		menu_box.SetTopLeft(80, 86);
 
 	}
 	if (while_menu ) {//選單介面 出現時
@@ -111,21 +111,21 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				map_menu.SetFrameIndexOfBitmap(0);
 				menu_box.SetFrameIndexOfBitmap(0);
 				
-				phase = ((menu_box.GetLeft() - 90) / 88) + ((menu_box.GetTop() - 96) / 118*5)+1;
+				phase = ((menu_box.GetLeft() - 80) / 88) + ((menu_box.GetTop() - 86) / 118*5)+1;
 				reset_phase(phase-1);
 				menu_box.SetTopLeft(0, 0);
 		}
 
-		if (nChar == VK_UP && menu_box.GetTop()>96) {
+		if (nChar == VK_UP && menu_box.GetTop()>86) {
 			menu_box.SetTopLeft(menu_box.GetLeft(), menu_box.GetTop() - 118);
 		}
-		if (nChar == VK_DOWN && menu_box.GetTop() < 450) {
+		if (nChar == VK_DOWN && menu_box.GetTop() < 440) {
 			menu_box.SetTopLeft(menu_box.GetLeft(), menu_box.GetTop() + 118);
 		}
-		if (nChar == VK_RIGHT && menu_box.GetLeft() < 356) {
+		if (nChar == VK_RIGHT && menu_box.GetLeft() < 346) {
 			menu_box.SetTopLeft(menu_box.GetLeft() + 88, menu_box.GetTop());
 		}
-		if (nChar == VK_LEFT && menu_box.GetLeft() > 92) {
+		if (nChar == VK_LEFT && menu_box.GetLeft() > 82) {
 			menu_box.SetTopLeft(menu_box.GetLeft() - 88, menu_box.GetTop());
 		}
 	}
