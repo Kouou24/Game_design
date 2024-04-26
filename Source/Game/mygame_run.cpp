@@ -60,6 +60,25 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	dead.SetTopLeft(0, 0);
 
 
+	map_menu.LoadBitmapByString({
+		"resources/fin_ignore.bmp",
+		"resources/menu.bmp",
+
+		}, RGB(255, 255, 255));
+	map_menu.SetTopLeft(0, 0);
+
+
+	menu_box.LoadBitmapByString({
+		"resources/fin_ignore.bmp",
+		"resources/select_box.bmp",
+
+		}, RGB(255, 255, 255));
+	menu_box.SetTopLeft(90, 96);
+
+
+	map_menu.SetFrameIndexOfBitmap(1);
+	menu_box.SetFrameIndexOfBitmap(1);
+
 	load_background();
 
 
@@ -68,32 +87,69 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	
-	if (nChar == 0x52){
+	if (nChar == 0x52){ // 重置關卡 R
 		while_load = false;
 		load.SetFrameIndexOfBitmap(0);
-		reset_phase(phase-1); //關卡減1
+		reset_phase(phase-1); //關卡減1=本關卡的陣列位址
 	}
 
-	if (nChar == 0x51) {
+	if (nChar == 0x51) {//金手指 Q
 		win_flag = true;
 	}
+	if (nChar == 0x4D) {// 去地圖選關 M
 
-	if (nChar == VK_UP) {
-		last_x = character.GetLeft(), last_y = character.GetTop();
-		character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
+		while_menu = true;
+		map_menu.SetFrameIndexOfBitmap(1);
+		menu_box.SetFrameIndexOfBitmap(1);
+		menu_box.SetTopLeft(90, 96);
+
 	}
-	if (nChar == VK_DOWN) {
-		last_x = character.GetLeft(), last_y = character.GetTop();
-		character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
+	if (while_menu ) {//選單介面 出現時
+		if (nChar == VK_RETURN) {
+
+				while_menu = false;
+				map_menu.SetFrameIndexOfBitmap(0);
+				menu_box.SetFrameIndexOfBitmap(0);
+				
+				phase = ((menu_box.GetLeft() - 90) / 88) + ((menu_box.GetTop() - 96) / 118*5)+1;
+				reset_phase(phase-1);
+				menu_box.SetTopLeft(0, 0);
+		}
+
+		if (nChar == VK_UP && menu_box.GetTop()>96) {
+			menu_box.SetTopLeft(menu_box.GetLeft(), menu_box.GetTop() - 118);
+		}
+		if (nChar == VK_DOWN && menu_box.GetTop() < 450) {
+			menu_box.SetTopLeft(menu_box.GetLeft(), menu_box.GetTop() + 118);
+		}
+		if (nChar == VK_RIGHT && menu_box.GetLeft() < 356) {
+			menu_box.SetTopLeft(menu_box.GetLeft() + 88, menu_box.GetTop());
+		}
+		if (nChar == VK_LEFT && menu_box.GetLeft() > 92) {
+			menu_box.SetTopLeft(menu_box.GetLeft() - 88, menu_box.GetTop());
+		}
 	}
-	if (nChar == VK_RIGHT) {
-		last_x = character.GetLeft(), last_y = character.GetTop();
-		character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
+	
+	else {
+		if (nChar == VK_UP) {
+			last_x = character.GetLeft(), last_y = character.GetTop();
+			character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
+		}
+		if (nChar == VK_DOWN) {
+			last_x = character.GetLeft(), last_y = character.GetTop();
+			character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
+		}
+		if (nChar == VK_RIGHT) {
+			last_x = character.GetLeft(), last_y = character.GetTop();
+			character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
+		}
+		if (nChar == VK_LEFT) {
+			last_x = character.GetLeft(), last_y = character.GetTop();
+			character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
+		}
 	}
-	if (nChar == VK_LEFT) {
-		last_x = character.GetLeft(), last_y = character.GetTop();
-		character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
-	}
+
+	
 	
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
@@ -180,8 +236,6 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					while_load = false;
 					load.SetFrameIndexOfBitmap(0);
 				}
-				//fin[i].SetFrameIndexOfBitmap(1);
-				//win_flag = true;
 			}
 			
 		}
@@ -246,6 +300,7 @@ void CGameStateRun::OnShow()
 }
 
 void CGameStateRun::show_image_by_phase() {
+
 	if (phase <= MAP_COUNT) {
 		background.ShowBitmap();
 		show_map();
@@ -265,6 +320,9 @@ void CGameStateRun::show_image_by_phase() {
 		dead.ShowBitmap();
 		load.ShowBitmap();
 	}
+
+	map_menu.ShowBitmap();
+	menu_box.ShowBitmap();
 }
 
 
@@ -302,7 +360,11 @@ void CGameStateRun::show_text_by_phase() {
 		if (while_load) {
 			CTextDraw::Print(pDC, 50, 20, "");
 		}
-		
+
+		else if (while_menu) {
+			CTextDraw::Print(pDC, 50, 20, "");
+		}
+
 		else if (phase == p && sub_phase == 1) {
 			
 			CTextDraw::Print(pDC, 50, 20, "關卡 : "+ std::to_string(p) +"/ 20");
@@ -312,35 +374,16 @@ void CGameStateRun::show_text_by_phase() {
 	if (while_load) {
 		CTextDraw::Print(pDC, 50, 20, "");
 	}
+	else if (while_menu) {
+		CTextDraw::Print(pDC, 50, 20, "");
+	}
+	
+
 	else if (phase == 1)
 	{
 		CTextDraw::Print(pDC, 150, 450, "hint : press R to reset");
 
 	}
-	/*
-	if (while_load) {
-		CTextDraw::Print(pDC, 50, 20, "");
-	}
-	else if (phase == 1 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 1 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} else if (phase == 2 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 2 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} else if (phase == 3 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 3 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} else if (phase == 4 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 4 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} else if (phase == 5 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 5 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} else if (phase == 6 && sub_phase == 1) {
-		CTextDraw::Print(pDC, 50, 20, "關卡 : 6 / 20");
-		CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-	} 
-	*/
 	CDDraw::ReleaseBackCDC();
 }
 
@@ -477,3 +520,7 @@ void CGameStateRun::show_map() {
 		wall[i].ShowBitmap();
 	}
 }
+
+
+
+
