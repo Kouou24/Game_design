@@ -290,6 +290,15 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 			reset_phase(phase - 1);
 		}
 	}
+	if (while_menu) {
+		while_menu = false;
+		map_menu.SetFrameIndexOfBitmap(0);
+		menu_box.SetFrameIndexOfBitmap(0);
+
+		phase = ((menu_box.GetLeft() - 80) / 88) + ((menu_box.GetTop() - 86) / 118 * 5) + 1;
+		reset_phase(phase - 1);
+		menu_box.SetTopLeft(0, 0);
+	}
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
@@ -300,6 +309,15 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
 	x_print = point.x;
 	y_print = point.y;
+	if (while_menu) {
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 4; j++) {
+				if ((x_print >= (80 + (i * 88))) && (x_print <= (80 + (i + 1) * 88)) && (y_print >= (86 + (j * 118))) && (y_print <= (86 + ((j + 1) * 118)))) {
+					menu_box.SetTopLeft((i * 88) + 80, 86 + (j * 118));
+				}
+			}
+		}
+	}
 
 
 
@@ -356,12 +374,14 @@ void CGameStateRun::show_image_by_phase() {
 }
 
 
+
 void game_framework::CGameStateRun::load_background()
 {
-	ifstream ifs("map/Random.map");
+
 
 	int i_max, j_max, c;
 	for (int k = 0; k < MAP_COUNT; k++) {  //初始化 地圖數量=k
+		ifstream ifs("map/phase" + std::to_string(k + 1) + ".map");
 		ifs >> i_max;
 		ifs >> j_max;
 		map.push_back(vector<vector<int> >());
@@ -375,8 +395,9 @@ void game_framework::CGameStateRun::load_background()
 				background_map[k][i].push_back(CMovingBitmap());
 			}
 		}
+		ifs.close();
 	}
-	ifs.close();
+
 
 	reset_phase(0);
 }
