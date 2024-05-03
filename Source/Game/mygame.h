@@ -95,6 +95,8 @@ namespace game_framework {
 	private:
 		int phase = 1;
 		int sub_phase = 1;
+		int x_print;
+		int y_print;
 		vector<vector<vector<int> > > map;
 		int last_x;
 		int last_y;
@@ -120,6 +122,7 @@ namespace game_framework {
 		void reset_phase(int phase_chose);
 		void show_image_by_phase();
 		void show_text_by_phase();
+		void show_text_point(int x_print, int y_print);
 
 	};
 

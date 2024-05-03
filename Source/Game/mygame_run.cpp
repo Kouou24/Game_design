@@ -43,7 +43,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 	background.LoadBitmapByString({
 		"resources/background_all.bmp",
-		
+
 		});
 	background.SetTopLeft(0, 0);
 
@@ -86,11 +86,11 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	
-	if (nChar == 0x52){ // 重置關卡 R
+
+	if (nChar == 0x52) { // 重置關卡 R
 		while_load = false;
 		load.SetFrameIndexOfBitmap(0);
-		reset_phase(phase-1); //關卡減1=本關卡的陣列位址
+		reset_phase(phase - 1); //關卡減1=本關卡的陣列位址
 	}
 
 	if (nChar == 0x51) {//金手指 Q
@@ -104,19 +104,19 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		menu_box.SetTopLeft(80, 86);
 
 	}
-	if (while_menu ) {//選單介面 出現時
+	if (while_menu) {//選單介面 出現時
 		if (nChar == VK_RETURN) {
 
-				while_menu = false;
-				map_menu.SetFrameIndexOfBitmap(0);
-				menu_box.SetFrameIndexOfBitmap(0);
-				
-				phase = ((menu_box.GetLeft() - 80) / 88) + ((menu_box.GetTop() - 86) / 118*5)+1;
-				reset_phase(phase-1);
-				menu_box.SetTopLeft(0, 0);
+			while_menu = false;
+			map_menu.SetFrameIndexOfBitmap(0);
+			menu_box.SetFrameIndexOfBitmap(0);
+
+			phase = ((menu_box.GetLeft() - 80) / 88) + ((menu_box.GetTop() - 86) / 118 * 5) + 1;
+			reset_phase(phase - 1);
+			menu_box.SetTopLeft(0, 0);
 		}
 
-		if (nChar == VK_UP && menu_box.GetTop()>86) {
+		if (nChar == VK_UP && menu_box.GetTop() > 86) {
 			menu_box.SetTopLeft(menu_box.GetLeft(), menu_box.GetTop() - 118);
 		}
 		if (nChar == VK_DOWN && menu_box.GetTop() < 440) {
@@ -129,7 +129,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			menu_box.SetTopLeft(menu_box.GetLeft() - 88, menu_box.GetTop());
 		}
 	}
-	
+
 	else {
 		if (nChar == VK_UP) {
 			last_x = character.GetLeft(), last_y = character.GetTop();
@@ -149,8 +149,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
-	
-	
+
+
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
 			if (CMovingBitmap::IsOverlap(character, bomb[i])) {
@@ -159,7 +159,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
-	int gg = int(fin.size())  , k = 0;
+	int gg = int(fin.size()), k = 0;
 	for (int j = 0; j < int(box.size()); j++) {
 
 		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
@@ -182,26 +182,26 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
 			box[j].SetTopLeft(box[j].GetLeft() - MAP_SIZE, box[j].GetTop());
 		}
-		
+
 
 		for (int i = 0; i<int(box.size()); i++) {
 
-			
-				if (i == j) continue;
-				if (CMovingBitmap::IsOverlap(box[j], box[i])) {
-					character.SetTopLeft(last_x, last_y);
-					last_x = character.GetLeft();
-					last_y = character.GetTop();
 
-					box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
-					lastbox_x[j] = box[j].GetLeft();
-					lastbox_y[j] = box[j].GetTop();
+			if (i == j) continue;
+			if (CMovingBitmap::IsOverlap(box[j], box[i])) {
+				character.SetTopLeft(last_x, last_y);
+				last_x = character.GetLeft();
+				last_y = character.GetTop();
 
-					box[i].SetTopLeft(lastbox_x[i], lastbox_y[i]);
-					lastbox_x[i] = box[i].GetLeft();
-					lastbox_y[i] = box[i].GetTop();
-				}
-			
+				box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
+				lastbox_x[j] = box[j].GetLeft();
+				lastbox_y[j] = box[j].GetTop();
+
+				lastbox_x[i] = box[i].GetLeft();
+				lastbox_y[i] = box[i].GetTop();
+				box[i].SetTopLeft(lastbox_x[i], lastbox_y[i]);
+			}
+
 		}
 
 
@@ -237,7 +237,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					load.SetFrameIndexOfBitmap(0);
 				}
 			}
-			
+
 		}
 	}
 
@@ -269,7 +269,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	
+
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
@@ -282,6 +282,11 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)	// 處理滑鼠的動作
 {
+	x_print = point.x;
+	y_print = point.y;
+
+
+
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
@@ -297,6 +302,15 @@ void CGameStateRun::OnShow()
 	phase_control();
 	show_image_by_phase();
 	show_text_by_phase();
+	show_text_point(x_print, y_print);
+}
+void CGameStateRun::show_text_point(int x_print, int y_print) {
+	CDC *pDC = CDDraw::GetBackCDC();
+	CTextDraw::ChangeFontLog(pDC, 21, "微軟正黑體", RGB(255, 255, 255), 800);
+	CTextDraw::Print(pDC, 450, 50, to_string(x_print));
+	CTextDraw::Print(pDC, 500, 50, to_string(y_print));
+	CDDraw::ReleaseBackCDC();
+
 }
 
 void CGameStateRun::show_image_by_phase() {
@@ -305,13 +319,13 @@ void CGameStateRun::show_image_by_phase() {
 		background.ShowBitmap();
 		show_map();
 		for (int i = 0; i < int(fin.size()); i++) {
-				fin[i].ShowBitmap();
-			}
-		if (bomb.size()>0) {
-			for (int i = 0; i < int(bomb.size()) ; i++) {
+			fin[i].ShowBitmap();
+		}
+		if (bomb.size() > 0) {
+			for (int i = 0; i < int(bomb.size()); i++) {
 				bomb[i].ShowBitmap();
 			}
-			
+
 		}
 		character.ShowBitmap();
 		for (int i = 0; i < int(box.size()); i++) {
@@ -330,14 +344,14 @@ void game_framework::CGameStateRun::load_background()
 {
 	ifstream ifs("map/Random.map");
 
-	int i_max, j_max,c;
+	int i_max, j_max, c;
 	for (int k = 0; k < MAP_COUNT; k++) {  //初始化 地圖數量=k
 		ifs >> i_max;
 		ifs >> j_max;
 		map.push_back(vector<vector<int> >());
 		background_map.push_back(vector<vector<CMovingBitmap> >());
 		for (int i = 0; i < i_max; i++) {
-			map[k].push_back(vector<int> ());
+			map[k].push_back(vector<int>());
 			background_map[k].push_back(vector<CMovingBitmap>());
 			for (int j = 0; j < j_max; j++) {
 				ifs >> c;
@@ -366,8 +380,8 @@ void CGameStateRun::show_text_by_phase() {
 		}
 
 		else if (phase == p && sub_phase == 1) {
-			
-			CTextDraw::Print(pDC, 50, 20, "關卡 : "+ std::to_string(p) +"/ 20");
+
+			CTextDraw::Print(pDC, 50, 20, "關卡 : " + std::to_string(p) + "/ 20");
 			CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
 		}
 	}
@@ -377,7 +391,7 @@ void CGameStateRun::show_text_by_phase() {
 	else if (while_menu) {
 		CTextDraw::Print(pDC, 50, 20, "");
 	}
-	
+
 
 	else if (phase == 1)
 	{
@@ -499,7 +513,7 @@ void CGameStateRun::phase_control() {
 				if (phase == MAP_COUNT) {
 					GotoGameState(GAME_STATE_OVER);
 				}
-				
+
 			}
 		}
 
