@@ -274,6 +274,22 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
+	while (while_load)
+	{
+		if (point.x >= 110 && point.x <= 252 && point.y >= 345 && point.y <= 464)
+		{
+			CAudio::Instance()->Stop(2);
+			win_flag = true;
+			while_load = false;
+			load.SetFrameIndexOfBitmap(0);
+		}
+		if (point.x >= 332 && point.x <= 485 && point.y >= 344 && point.y <= 473)
+		{
+			while_load = false;
+			load.SetFrameIndexOfBitmap(0);
+			reset_phase(phase - 1);
+		}
+	}
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)	// 處理滑鼠的動作
