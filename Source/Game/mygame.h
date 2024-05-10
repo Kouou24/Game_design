@@ -105,6 +105,7 @@ namespace game_framework {
 		vector<vector<vector< CMovingBitmap> > > background_map;
 		CMovingBitmap background;
 		CMovingBitmap map_menu;
+		CMovingBitmap scare;
 		CMovingBitmap menu_box;
 		CMovingBitmap character;
 		vector<CMovingBitmap> box;

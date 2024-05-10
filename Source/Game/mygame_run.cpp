@@ -9,6 +9,10 @@
 #include <fstream>
 #include "config.h"
 #include <string>
+#include <stdlib.h>
+#include <time.h>
+#include <iostream>
+
 
 
 using namespace game_framework;
@@ -19,6 +23,7 @@ using namespace game_framework;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
+
 }
 
 CGameStateRun::~CGameStateRun()
@@ -36,6 +41,7 @@ void CGameStateRun::OnMove()							// 移動遊戲元素
 
 void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 {
+
 	CAudio::Instance()->Load(1, "music/push_sound.mp3");
 	CAudio::Instance()->Load(2, "music/win_sound.mp3");
 	CAudio::Instance()->Load(3, "music/game.mp3");
@@ -79,6 +85,13 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	map_menu.SetFrameIndexOfBitmap(1);
 	menu_box.SetFrameIndexOfBitmap(1);
 
+	scare.LoadBitmapByString({
+		"resources/fin_ignore.bmp",
+		"resources/scare.bmp",
+
+		}, RGB(255, 255, 255));
+	scare.SetTopLeft(0, 0);
+	scare.SetFrameIndexOfBitmap(0);
 	load_background();
 
 
@@ -86,10 +99,11 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-
+	
 	if (nChar == 0x52) { // 重置關卡 R
 		while_load = false;
 		load.SetFrameIndexOfBitmap(0);
+		scare.SetFrameIndexOfBitmap(0);
 		reset_phase(phase - 1); //關卡減1=本關卡的陣列位址
 	}
 
@@ -127,6 +141,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 		if (nChar == VK_LEFT && menu_box.GetLeft() > 82) {
 			menu_box.SetTopLeft(menu_box.GetLeft() - 88, menu_box.GetTop());
+			
 		}
 	}
 
@@ -260,9 +275,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			}
 		}
 	}
+	
 
-
-
+	
 }
 
 
@@ -368,7 +383,7 @@ void CGameStateRun::show_image_by_phase() {
 		dead.ShowBitmap();
 		load.ShowBitmap();
 	}
-
+	scare.ShowBitmap();
 	map_menu.ShowBitmap();
 	menu_box.ShowBitmap();
 }
