@@ -32,7 +32,7 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
-	CAudio::Instance()->Play(3, true);
+	//CAudio::Instance()->Play(3, true);
 }
 
 void CGameStateRun::OnMove()							// ²¾°Ê¹CÀ¸¤¸¯À
@@ -146,29 +146,14 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	else {
-		if (nChar == VK_UP) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
-		}
-		if (nChar == VK_DOWN) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
-		}
-		if (nChar == VK_RIGHT) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
-		}
-		if (nChar == VK_LEFT) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
-		}
+		character.moving(nChar);
 	}
 
 
 
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
-			if (CMovingBitmap::IsOverlap(character, bomb[i])) {
+			if (character.is_bomb( bomb[i].pushout() )) {
 				dead.SetFrameIndexOfBitmap(1);
 			}
 		}
@@ -177,22 +162,22 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	int gg = int(fin.size()), k = 0;
 	for (int j = 0; j < int(box.size()); j++) {
 
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
+		if (character.is_pushbox( box[j]) && nChar == VK_UP) {
 			CAudio::Instance()->Play(1, false);
 			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
 			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() - MAP_SIZE);
 		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_DOWN) {
+		if (character.is_pushbox(box[j]) && nChar == VK_DOWN) {
 			CAudio::Instance()->Play(1, false);
 			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
 			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() + MAP_SIZE);
 		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_RIGHT) {
+		if (character.is_pushbox(box[j]) && nChar == VK_RIGHT) {
 			CAudio::Instance()->Play(1, false);
 			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
 			box[j].SetTopLeft(box[j].GetLeft() + MAP_SIZE, box[j].GetTop());
 		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_LEFT) {
+		if (character.is_pushbox(box[j]) && nChar == VK_LEFT) {
 			CAudio::Instance()->Play(1, false);
 			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
 			box[j].SetTopLeft(box[j].GetLeft() - MAP_SIZE, box[j].GetTop());
@@ -204,9 +189,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 			if (i == j) continue;
 			if (CMovingBitmap::IsOverlap(box[j], box[i])) {
-				character.SetTopLeft(last_x, last_y);
-				last_x = character.GetLeft();
-				last_y = character.GetTop();
+				character.move_to_last();
 
 				box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
 				lastbox_x[j] = box[j].GetLeft();
@@ -222,11 +205,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		if (bomb.size() > 0) {
 			for (int i = 0; i < int(bomb.size()); i++) {
-				if (CMovingBitmap::IsOverlap(box[j], bomb[i])) {
+				if (CMovingBitmap::IsOverlap(box[j], bomb[i].pushout() )) {
 
-					character.SetTopLeft(last_x, last_y);
-					last_x = character.GetLeft();
-					last_y = character.GetTop();
+					character.move_to_last();
 
 					box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
 					lastbox_x[j] = box[j].GetLeft();
@@ -257,10 +238,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	for (int i = 0; i<int(wall.size()); i++) {
-		if (CMovingBitmap::IsOverlap(character, wall[i])) {
-			character.SetTopLeft(last_x, last_y);
-			last_x = character.GetLeft();
-			last_y = character.GetTop();
+		if (character.is_wall( wall[i])) {
+			character.move_to_last();
 		}
 		for (int j = 0; j < int(box.size()); j++) {
 
@@ -269,9 +248,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 				lastbox_x[j] = box[j].GetLeft();
 				lastbox_y[j] = box[j].GetTop();
 
-				character.SetTopLeft(last_x, last_y);
-				last_x = character.GetLeft();
-				last_y = character.GetTop();
+				character.move_to_last();
 			}
 		}
 	}
@@ -372,11 +349,11 @@ void CGameStateRun::show_image_by_phase() {
 		}
 		if (bomb.size() > 0) {
 			for (int i = 0; i < int(bomb.size()); i++) {
-				bomb[i].ShowBitmap();
+				bomb[i].show();
 			}
 
 		}
-		character.ShowBitmap();
+		character.show();
 		for (int i = 0; i < int(box.size()); i++) {
 			box[i].ShowBitmap();
 		}
@@ -498,8 +475,7 @@ void CGameStateRun::reset_phase(int phase_chose) {
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
 				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
-				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-				character.SetTopLeft(120 + MAP_SIZE * j, 120 + MAP_SIZE * i);
+				character.Setnew(int(i),int(j));
 
 			}
 			if (map[k][i][j] == 5) {
@@ -520,7 +496,7 @@ void CGameStateRun::reset_phase(int phase_chose) {
 				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
 				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
-				bomb.push_back(CMovingBitmap());
+				bomb.push_back(Bomb());
 				bomb[bomb.size() - 1].LoadBitmapByString({ "resources/bomb.bmp", "resources/bomb_ignore.bmp" }, RGB(255, 255, 255));
 				bomb[bomb.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 				bomb[bomb.size() - 1].SetFrameIndexOfBitmap(0);
