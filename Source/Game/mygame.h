@@ -38,7 +38,9 @@
  *      3. Use ShowInitProgress(percent) to display loading progress.
 */
 
-
+#include "character.h"
+#include "bomb.h"
+#include "box.h"
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -98,19 +100,15 @@ namespace game_framework {
 		int x_print;
 		int y_print;
 		vector<vector<vector<int> > > map;
-		int last_x;
-		int last_y;
-		vector<int> lastbox_x;
-		vector<int> lastbox_y;
 		vector<vector<vector< CMovingBitmap> > > background_map;
 		CMovingBitmap background;
 		CMovingBitmap map_menu;
 		CMovingBitmap scare;
 		CMovingBitmap menu_box;
-		CMovingBitmap character;
-		vector<CMovingBitmap> box;
+		Character character;
+		vector<Box> box;
 		vector<CMovingBitmap> fin;
-		vector<CMovingBitmap> bomb;
+		vector<Bomb> bomb;
 		CMovingBitmap dead;
 		CMovingBitmap load;
 		vector<CMovingBitmap> wall;

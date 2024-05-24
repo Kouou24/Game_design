@@ -32,7 +32,7 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
-	CAudio::Instance()->Play(3, true);
+	//CAudio::Instance()->Play(3, true);
 }
 
 void CGameStateRun::OnMove()							// ²¾°Ê¹CÀ¸¤¸¯À
@@ -146,29 +146,14 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	else {
-		if (nChar == VK_UP) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft(), character.GetTop() - MAP_SIZE);
-		}
-		if (nChar == VK_DOWN) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft(), character.GetTop() + MAP_SIZE);
-		}
-		if (nChar == VK_RIGHT) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft() + MAP_SIZE, character.GetTop());
-		}
-		if (nChar == VK_LEFT) {
-			last_x = character.GetLeft(), last_y = character.GetTop();
-			character.SetTopLeft(character.GetLeft() - MAP_SIZE, character.GetTop());
-		}
+		character.moving(nChar);
 	}
 
 
 
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
-			if (CMovingBitmap::IsOverlap(character, bomb[i])) {
+			if (character.is_bomb( bomb[i].pushout() )) {
 				dead.SetFrameIndexOfBitmap(1);
 			}
 		}
@@ -177,44 +162,23 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	int gg = int(fin.size()), k = 0;
 	for (int j = 0; j < int(box.size()); j++) {
 
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_UP) {
+		if (character.is_pushbox( box[j].pushout()) ) {
 			CAudio::Instance()->Play(1, false);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() - MAP_SIZE);
+			box[j].box_pushed(nChar);
 		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_DOWN) {
-			CAudio::Instance()->Play(1, false);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-			box[j].SetTopLeft(box[j].GetLeft(), box[j].GetTop() + MAP_SIZE);
-		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_RIGHT) {
-			CAudio::Instance()->Play(1, false);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-			box[j].SetTopLeft(box[j].GetLeft() + MAP_SIZE, box[j].GetTop());
-		}
-		if (CMovingBitmap::IsOverlap(character, box[j]) && nChar == VK_LEFT) {
-			CAudio::Instance()->Play(1, false);
-			lastbox_x[j] = box[j].GetLeft(), lastbox_y[j] = box[j].GetTop();
-			box[j].SetTopLeft(box[j].GetLeft() - MAP_SIZE, box[j].GetTop());
-		}
+		
 
 
 		for (int i = 0; i<int(box.size()); i++) {
 
 
 			if (i == j) continue;
-			if (CMovingBitmap::IsOverlap(box[j], box[i])) {
-				character.SetTopLeft(last_x, last_y);
-				last_x = character.GetLeft();
-				last_y = character.GetTop();
+			if (CMovingBitmap::IsOverlap(box[j].pushout(), box[i].pushout() )) {
+				character.move_to_last();
 
-				box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
-				lastbox_x[j] = box[j].GetLeft();
-				lastbox_y[j] = box[j].GetTop();
+				box[j].move_to_last();
 
-				lastbox_x[i] = box[i].GetLeft();
-				lastbox_y[i] = box[i].GetTop();
-				box[i].SetTopLeft(lastbox_x[i], lastbox_y[i]);
+				
 			}
 
 		}
@@ -222,15 +186,11 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		if (bomb.size() > 0) {
 			for (int i = 0; i < int(bomb.size()); i++) {
-				if (CMovingBitmap::IsOverlap(box[j], bomb[i])) {
+				if (CMovingBitmap::IsOverlap(box[j].pushout(), bomb[i].pushout() )) {
 
-					character.SetTopLeft(last_x, last_y);
-					last_x = character.GetLeft();
-					last_y = character.GetTop();
+					character.move_to_last();
 
-					box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
-					lastbox_x[j] = box[j].GetLeft();
-					lastbox_y[j] = box[j].GetTop();
+					box[j].move_to_last();
 
 				}
 			}
@@ -238,7 +198,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		for (int i = 0; i < int(fin.size()); i++) {
 
-			if ((CMovingBitmap::IsOverlap(fin[i], box[j]))) {
+			if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout() ))) {
 				k++;
 			}
 			if (k == gg) {
@@ -257,21 +217,14 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	for (int i = 0; i<int(wall.size()); i++) {
-		if (CMovingBitmap::IsOverlap(character, wall[i])) {
-			character.SetTopLeft(last_x, last_y);
-			last_x = character.GetLeft();
-			last_y = character.GetTop();
+		if (character.is_wall( wall[i])) {
+			character.move_to_last();
 		}
 		for (int j = 0; j < int(box.size()); j++) {
-
-			if (CMovingBitmap::IsOverlap(box[j], wall[i])) {
-				box[j].SetTopLeft(lastbox_x[j], lastbox_y[j]);
-				lastbox_x[j] = box[j].GetLeft();
-				lastbox_y[j] = box[j].GetTop();
-
-				character.SetTopLeft(last_x, last_y);
-				last_x = character.GetLeft();
-				last_y = character.GetTop();
+			
+			if (CMovingBitmap::IsOverlap(box[j].pushout(), wall[i])) {
+				box[j].move_to_last();
+				character.move_to_last();
 			}
 		}
 	}
@@ -351,7 +304,7 @@ void CGameStateRun::OnShow()
 	phase_control();
 	show_image_by_phase();
 	show_text_by_phase();
-	show_text_point(x_print, y_print);
+	//show_text_point(x_print, y_print);
 }
 void CGameStateRun::show_text_point(int x_print, int y_print) {
 	CDC *pDC = CDDraw::GetBackCDC();
@@ -372,13 +325,13 @@ void CGameStateRun::show_image_by_phase() {
 		}
 		if (bomb.size() > 0) {
 			for (int i = 0; i < int(bomb.size()); i++) {
-				bomb[i].ShowBitmap();
+				bomb[i].show();
 			}
 
 		}
-		character.ShowBitmap();
+		character.show();
 		for (int i = 0; i < int(box.size()); i++) {
-			box[i].ShowBitmap();
+			box[i].show();
 		}
 		dead.ShowBitmap();
 		load.ShowBitmap();
@@ -463,20 +416,18 @@ void CGameStateRun::reset_phase(int phase_chose) {
 	bomb.clear();
 	box.clear();
 	fin.clear();
-	lastbox_y.clear();
-	lastbox_x.clear();
 	dead.SetFrameIndexOfBitmap(0);
 	int k = phase_chose;
 	for (size_t i = 0; i < map[k].size(); i++) {
 		for (size_t j = 0; j < map[k][i].size(); j++) {
+
+			background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
+			background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+
 			if (map[k][i][j] == 1) {
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+				
 			}
 			if (map[k][i][j] == 2) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 				wall.push_back(CMovingBitmap());
 				wall[wall.size() - 1].LoadBitmapByString({ "resources/wall.bmp" });
@@ -484,29 +435,15 @@ void CGameStateRun::reset_phase(int phase_chose) {
 			}
 			if (map[k][i][j] == 3) {
 
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-
-				box.push_back(CMovingBitmap());
-				box[box.size() - 1].LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
-				box[box.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-				lastbox_x.push_back(MAP_SIZE*j + 120);
-				lastbox_y.push_back(MAP_SIZE*i + 120);
+				box.push_back(Box());
+				box[box.size() - 1].Setnew(int(i),int(j));
 			}
 			if (map[k][i][j] == 4) {
 
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-
-				character.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-				character.SetTopLeft(120 + MAP_SIZE * j, 120 + MAP_SIZE * i);
+				character.Setnew(int(i),int(j));
 
 			}
 			if (map[k][i][j] == 5) {
-
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-
 
 				fin.push_back(CMovingBitmap());
 				fin[fin.size() - 1].LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
@@ -517,26 +454,15 @@ void CGameStateRun::reset_phase(int phase_chose) {
 			}
 			if (map[k][i][j] == 6) {
 
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-
-				bomb.push_back(CMovingBitmap());
-				bomb[bomb.size() - 1].LoadBitmapByString({ "resources/bomb.bmp", "resources/bomb_ignore.bmp" }, RGB(255, 255, 255));
-				bomb[bomb.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-				bomb[bomb.size() - 1].SetFrameIndexOfBitmap(0);
+				bomb.push_back(Bomb());
+				bomb[bomb.size() - 1].Setnew(int(i), int(j));
 
 
 			}
 			if (map[k][i][j] == 7) {
 
-				background_map[k][i][j].LoadBitmapByString({ "resources/gress.bmp" });
-				background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-
-				box.push_back(CMovingBitmap());
-				box[box.size() - 1].LoadBitmapByString({ "resources/box.bmp" }, RGB(255, 255, 255));
-				box[box.size() - 1].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
-				lastbox_x.push_back(MAP_SIZE*j + 120);
-				lastbox_y.push_back(MAP_SIZE*i + 120);
+				box.push_back(Box());
+				box[box.size() - 1].Setnew(int(i), int(j));
 
 				fin.push_back(CMovingBitmap());
 				fin[fin.size() - 1].LoadBitmapByString({ "resources/fin.bmp", "resources/fin_ignore.bmp" }, RGB(255, 255, 255));
