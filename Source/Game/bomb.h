@@ -14,24 +14,25 @@
 
 
 namespace game_framework {
-	class bomb
+	class Bomb
 	{
 	public:
-		bomb(){}
-		~bomb(){}
+		Bomb(){}
+		~Bomb(){}
 		void Setnew(int i, int j) {
-			Bomb.LoadBitmapByString({ "resources/man.bmp" }, RGB(255, 255, 255));
-			Bomb.SetTopLeft(120 + MAP_SIZE * j, 120 + MAP_SIZE * i);
+			bomb.LoadBitmapByString({ "resources/bomb.bmp", "resources/bomb_ignore.bmp" }, RGB(255, 255, 255));
+			bomb.SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
+			bomb.SetFrameIndexOfBitmap(0);
 
 		}
 		CMovingBitmap pushout() {
-			return Bomb;
+			return bomb;
 		}
 		void show() {
-			Bomb.ShowBitmap();
+			bomb.ShowBitmap();
 		}
 	private:
-		CMovingBitmap Bomb;
+		CMovingBitmap bomb;
 	};
 
 }

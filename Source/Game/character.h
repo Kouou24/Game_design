@@ -58,10 +58,8 @@ namespace game_framework{
 			return 0;
 		}
 		bool is_bomb(CMovingBitmap bomb) {
-			if (CMovingBitmap::IsOverlap(character, bomb)) {
-				return 1;
-			}
-			else return 0;
+			if (CMovingBitmap::IsOverlap(character, bomb)) return 1;
+			return 0;
 		}
 		bool is_wall(CMovingBitmap wall) {
 			if (CMovingBitmap::IsOverlap(character, wall)) return 1;

@@ -40,7 +40,7 @@
 
 #include "character.h"
 #include "bomb.h"
-
+#include "box.h"
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -100,17 +100,15 @@ namespace game_framework {
 		int x_print;
 		int y_print;
 		vector<vector<vector<int> > > map;
-		vector<int> lastbox_x;
-		vector<int> lastbox_y;
 		vector<vector<vector< CMovingBitmap> > > background_map;
 		CMovingBitmap background;
 		CMovingBitmap map_menu;
 		CMovingBitmap scare;
 		CMovingBitmap menu_box;
 		Character character;
-		vector<CMovingBitmap> box;
+		vector<Box> box;
 		vector<CMovingBitmap> fin;
-		vector<bomb> Bomb;
+		vector<Bomb> bomb;
 		CMovingBitmap dead;
 		CMovingBitmap load;
 		vector<CMovingBitmap> wall;
