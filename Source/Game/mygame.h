@@ -113,6 +113,7 @@ namespace game_framework {
 		CMovingBitmap load;
 		vector<CMovingBitmap> wall;
 		bool win_flag = false;
+		bool while_dead = false;
 		bool while_load = false;
 		bool while_menu = true;
 		void load_background();

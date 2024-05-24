@@ -45,6 +45,7 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 	CAudio::Instance()->Load(1, "music/push_sound.mp3");
 	CAudio::Instance()->Load(2, "music/win_sound.mp3");
 	CAudio::Instance()->Load(3, "music/game.mp3");
+	CAudio::Instance()->Load(4, "music/die_sound.mp3");
 
 
 	background.LoadBitmapByString({
@@ -61,9 +62,9 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 	dead.LoadBitmapByString({
 		"resources/fin_ignore.bmp",
-		"resources/dead.bmp",
+		"resources/die_pic.bmp",
 		}, RGB(255, 255, 255));
-	dead.SetTopLeft(0, 0);
+	dead.SetTopLeft(-300, 200);
 
 
 	map_menu.LoadBitmapByString({
@@ -101,7 +102,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	
 	if (nChar == 0x52) { // 重置關卡 R
+		CAudio::Instance()->Stop(4);
 		while_load = false;
+		while_dead = false;
 		load.SetFrameIndexOfBitmap(0);
 		scare.SetFrameIndexOfBitmap(0);
 		reset_phase(phase - 1); //關卡減1=本關卡的陣列位址
@@ -118,7 +121,15 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		menu_box.SetTopLeft(80, 86);
 
 	}
-	if (while_menu) {//選單介面 出現時
+	if (while_dead)
+	{
+
+	}
+	else if (while_load)
+	{
+		
+	}
+	else if (while_menu) {//選單介面 出現時
 		if (nChar == VK_RETURN) {
 
 			while_menu = false;
@@ -154,6 +165,8 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
 			if (character.is_bomb( bomb[i].pushout() )) {
+				CAudio::Instance()->Play(4, false);
+				while_dead = true;
 				dead.SetFrameIndexOfBitmap(1);
 			}
 		}
@@ -201,16 +214,19 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout() ))) {
 				k++;
 			}
-			if (k == gg) {
-				CAudio::Instance()->Play(2, false);
-				load.SetFrameIndexOfBitmap(1);
-				while_load = true;
+			if(while_load){
 				if (nChar == 0x4A) {
 					CAudio::Instance()->Stop(2);
 					win_flag = true;
 					while_load = false;
-					load.SetFrameIndexOfBitmap(0);
+					load.SetFrameIndexOfBitmap(0);	
 				}
+				
+			}
+			else if (k == gg) {
+				CAudio::Instance()->Play(2, false);
+				load.SetFrameIndexOfBitmap(1);
+				while_load = true;
 			}
 
 		}
@@ -395,6 +411,9 @@ void CGameStateRun::show_text_by_phase() {
 	}
 	else if (while_menu) {
 		CTextDraw::Print(pDC, 50, 20, "");
+	}
+	else if (while_dead) {
+		CTextDraw::Print(pDC, 420, 320, "按R重製關卡");
 	}
 
 
