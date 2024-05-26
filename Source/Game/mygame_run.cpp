@@ -404,6 +404,7 @@ void CGameStateRun::show_text_by_phase() {
 
 			CTextDraw::Print(pDC, 50, 20, "關卡 : " + std::to_string(p) + "/ 20");
 			CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
+			CTextDraw::Print(pDC, 100, 450, "      M - 選關畫面          R - 重置關卡");
 		}
 	}
 	if (while_load) {
@@ -417,11 +418,7 @@ void CGameStateRun::show_text_by_phase() {
 	}
 
 
-	else if (phase == 1)
-	{
-		CTextDraw::Print(pDC, 150, 450, "hint : press R to reset");
-
-	}
+	
 	CDDraw::ReleaseBackCDC();
 }
 
