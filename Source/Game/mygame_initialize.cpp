@@ -27,7 +27,7 @@ void CGameStateInit::OnInit()
 
 	Sleep(200);
 	CAudio::Instance()->Load(0, "music/main.mp3");
-	//CAudio::Instance()->Play(0, true);
+	CAudio::Instance()->Play(0, true);
 	load_background();
 
 	ShowInitProgress(66, "Initialize...");
