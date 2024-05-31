@@ -32,7 +32,7 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
-	//CAudio::Instance()->Play(3, true);
+	CAudio::Instance()->Play(3, true);
 }
 
 void CGameStateRun::OnMove()							// 移動遊戲元素
@@ -100,9 +100,10 @@ void CGameStateRun::OnInit()  								// 遊戲的初值及圖形設定
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	
+
 	if (nChar == 0x52) { // 重置關卡 R
 		CAudio::Instance()->Stop(4);
+		CAudio::Instance()->Play(3, false);
 		while_load = false;
 		while_dead = false;
 		load.SetFrameIndexOfBitmap(0);
@@ -113,6 +114,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if (nChar == 0x51) {//金手指 Q
 		win_flag = true;
 	}
+
 	if (nChar == 0x4D) {// 去地圖選關 M
 
 		while_menu = true;
@@ -127,7 +129,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 	else if (while_load)
 	{
-		
+
 	}
 	else if (while_menu) {//選單介面 出現時
 		if (nChar == VK_RETURN) {
@@ -152,7 +154,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 		if (nChar == VK_LEFT && menu_box.GetLeft() > 82) {
 			menu_box.SetTopLeft(menu_box.GetLeft() - 88, menu_box.GetTop());
-			
+
 		}
 	}
 
@@ -164,8 +166,9 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 	if (bomb.size() > 0) {
 		for (int i = 0; i < int(bomb.size()); i++) {
-			if (character.is_bomb( bomb[i].pushout() )) {
+			if (character.is_bomb(bomb[i].pushout())) {
 				CAudio::Instance()->Play(4, false);
+				CAudio::Instance()->Stop(3);
 				while_dead = true;
 				dead.SetFrameIndexOfBitmap(1);
 			}
@@ -175,23 +178,23 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	int gg = int(fin.size()), k = 0;
 	for (int j = 0; j < int(box.size()); j++) {
 
-		if (character.is_pushbox( box[j].pushout()) ) {
+		if (character.is_pushbox(box[j].pushout())) {
 			CAudio::Instance()->Play(1, false);
 			box[j].box_pushed(nChar);
 		}
-		
+
 
 
 		for (int i = 0; i<int(box.size()); i++) {
 
 
 			if (i == j) continue;
-			if (CMovingBitmap::IsOverlap(box[j].pushout(), box[i].pushout() )) {
+			if (CMovingBitmap::IsOverlap(box[j].pushout(), box[i].pushout())) {
 				character.move_to_last();
 
 				box[j].move_to_last();
 
-				
+
 			}
 
 		}
@@ -199,7 +202,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		if (bomb.size() > 0) {
 			for (int i = 0; i < int(bomb.size()); i++) {
-				if (CMovingBitmap::IsOverlap(box[j].pushout(), bomb[i].pushout() )) {
+				if (CMovingBitmap::IsOverlap(box[j].pushout(), bomb[i].pushout())) {
 
 					character.move_to_last();
 
@@ -211,17 +214,17 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		for (int i = 0; i < int(fin.size()); i++) {
 
-			if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout() ))) {
+			if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout()))) {
 				k++;
 			}
-			if(while_load){
+			if (while_load) {
 				if (nChar == 0x4A) {
 					CAudio::Instance()->Stop(2);
 					win_flag = true;
 					while_load = false;
-					load.SetFrameIndexOfBitmap(0);	
+					load.SetFrameIndexOfBitmap(0);
 				}
-				
+
 			}
 			else if (k == gg) {
 				CAudio::Instance()->Play(2, false);
@@ -233,20 +236,20 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 
 	for (int i = 0; i<int(wall.size()); i++) {
-		if (character.is_wall( wall[i])) {
+		if (character.is_wall(wall[i])) {
 			character.move_to_last();
 		}
 		for (int j = 0; j < int(box.size()); j++) {
-			
+
 			if (CMovingBitmap::IsOverlap(box[j].pushout(), wall[i])) {
 				box[j].move_to_last();
 				character.move_to_last();
 			}
 		}
 	}
-	
 
-	
+
+
 }
 
 
@@ -404,7 +407,7 @@ void CGameStateRun::show_text_by_phase() {
 
 			CTextDraw::Print(pDC, 50, 20, "關卡 : " + std::to_string(p) + "/ 20");
 			CTextDraw::Print(pDC, 370, 20, "將箱子推到指定地點");
-			CTextDraw::Print(pDC, 100, 450, "      M - 選關畫面          R - 重置關卡");
+			CTextDraw::Print(pDC, 100, 80, "      M - 選關畫面          R - 重置關卡");
 		}
 	}
 	if (while_load) {
@@ -418,7 +421,7 @@ void CGameStateRun::show_text_by_phase() {
 	}
 
 
-	
+
 	CDDraw::ReleaseBackCDC();
 }
 
@@ -441,7 +444,7 @@ void CGameStateRun::reset_phase(int phase_chose) {
 			background_map[k][i][j].SetTopLeft(MAP_SIZE*j + 120, MAP_SIZE*i + 120);
 
 			if (map[k][i][j] == 1) {
-				
+
 			}
 			if (map[k][i][j] == 2) {
 
@@ -452,11 +455,11 @@ void CGameStateRun::reset_phase(int phase_chose) {
 			if (map[k][i][j] == 3) {
 
 				box.push_back(Box());
-				box[box.size() - 1].Setnew(int(i),int(j));
+				box[box.size() - 1].Setnew(int(i), int(j));
 			}
 			if (map[k][i][j] == 4) {
 
-				character.Setnew(int(i),int(j));
+				character.Setnew(int(i), int(j));
 
 			}
 			if (map[k][i][j] == 5) {
