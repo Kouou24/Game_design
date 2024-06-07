@@ -213,10 +213,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 
 		for (int i = 0; i < int(fin.size()); i++) {
-
-			if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout()))) {
-				k++;
-			}
+			
 			if (while_load) {
 				if (nChar == 0x4A) {
 					CAudio::Instance()->Stop(2);
@@ -224,13 +221,21 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 					while_load = false;
 					load.SetFrameIndexOfBitmap(0);
 				}
+			}
+			else if ((CMovingBitmap::IsOverlap(fin[i], box[j].pushout()))) {
+				k++;
+				if (k == gg) {
+					reset_phase(phase - 1);
+					CAudio::Instance()->Play(2, false);
+					load.SetFrameIndexOfBitmap(1);
+					while_load = true;
+					k = 0;
+				}
+			}
+			
 
-			}
-			else if (k == gg) {
-				CAudio::Instance()->Play(2, false);
-				load.SetFrameIndexOfBitmap(1);
-				while_load = true;
-			}
+			
+			
 
 		}
 	}
